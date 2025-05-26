@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: system-ui, 'Segoe UI', 'Open Sans', 'Helvetica Neue', sans-serif;
+  margin: 0;
+  padding: 0;
+/* background: linear-gradient(to bottom, #f5f3ff, #ffffff); */
+
+  background: linear-gradient(135deg, #f9f5fc, #f9efff); /* Degradado en diagonal */
+  color: rgb(17, 17, 17);
+}
+
+
+h1, h2, h3 {
+  color: #e5b9ff;
+  color: #7912B0;
+}
+
+button {
+  cursor: pointer;
+}
+
+
+
+@layer utilities {
+  .text-morado {
+    color: #7912B0;
+  }
+  .bg-morado {
+    background-color: #7912B0;
+  }
+  .bg-diagonal-gradient {
+    background: linear-gradient(135deg, #f9f5fc, #f9efff);
+  }
+  .hover\:text-morado:hover {
+    color: #5e0e8d;
+  }
+}
