@@ -1,13 +1,16 @@
-import { Filter, Grid, List, ShoppingCart, Search } from "lucide-react"
+import { Filter, ShoppingCart, Search } from "lucide-react"
 import { useState, useEffect } from "react"
 import ProductoCard from "../../components/ProductoCard"
 import { ChevronDown, ChevronRight } from "lucide-react"
 import useProducto from "../../hooks/useProducto"
 import useCategoria from "../../hooks/useCategoria"
 
+// TODO No funciona filtar por categorías
+
 export default function LayoutProductos() {
-  const { getAllProductos, getProductosByCategoria, getProductosByNombre } = useProducto()
-  const { getAllCategorias, getCategoriasHijo, getCategoriaById, getCategoriasPadre, getCategoriasByIdPadre } = useCategoria()
+  const { getAllProductos, getProductosByCategoria } = useProducto()
+  const { getAllCategorias, getCategoriasPadre, getCategoriasByIdPadre } =
+    useCategoria()
 
   // Estados principales
   const [productos, setProductos] = useState([])
@@ -18,10 +21,10 @@ export default function LayoutProductos() {
   const [loading, setLoading] = useState(true)
 
   // Estados para funcionalidad
-  const [viewMode, setViewMode] = useState("grid")
   const [sortBy, setSortBy] = useState("newest")
   const [priceRange, setPriceRange] = useState([0, 1000])
-  const [selectedCategory, setSelectedCategory] = useState("all")
+  const [selectedCategories, setSelectedCategories] = useState([])
+  const [showAll, setShowAll] = useState(true) // Estado para la opción "Todas"
   const [searchTerm, setSearchTerm] = useState("")
   const [expandedCategories, setExpandedCategories] = useState([])
 
@@ -64,32 +67,118 @@ export default function LayoutProductos() {
     )
   }
 
-  // Función para manejar selección de categoría
-  const handleCategorySelect = (categoryId) => {
-    setSelectedCategory(categoryId)
+  // Funciones para determinar el estado de selección de las categorías padre
+  const isParentFullySelected = (categoriaPadreId) => {
+    const hijas = categoriasHijas[categoriaPadreId] || []
+    return (
+      hijas.length > 0 &&
+      hijas.every((hija) => selectedCategories.includes(hija.id)) &&
+      selectedCategories.includes(categoriaPadreId)
+    )
+  }
+
+  const isParentPartiallySelected = (categoriaPadreId) => {
+    const hijas = categoriasHijas[categoriaPadreId] || []
+    const algunaHijaSeleccionada = hijas.some((hija) => selectedCategories.includes(hija.id))
+    return algunaHijaSeleccionada && !isParentFullySelected(categoriaPadreId)
+  }
+
+  // Función para manejar selección de categorías con checkboxes
+  const handleCategoryToggle = (categoryId, isParent = false) => {
+    setSelectedCategories((prev) => {
+      let newSelected = [...prev]
+
+      // Si se está seleccionando alguna categoría, desactivar la opción "Todas"
+      if (showAll) {
+        setShowAll(false)
+      }
+
+      if (isParent) {
+        // Si es categoría padre
+        const categoriasHijasIds = categoriasHijas[categoryId]?.map((hija) => hija.id) || []
+
+        if (prev.includes(categoryId)) {
+          // Si está seleccionada, deseleccionar padre y todas las hijas
+          newSelected = newSelected.filter((id) => id !== categoryId && !categoriasHijasIds.includes(id))
+        } else {
+          // Si no está seleccionada, seleccionar padre y todas las hijas
+          newSelected = [...newSelected, categoryId, ...categoriasHijasIds]
+        }
+      } else {
+        // Si es categoría hija
+        if (prev.includes(categoryId)) {
+          // Deseleccionar la categoría hija
+          newSelected = newSelected.filter((id) => id !== categoryId)
+
+          // Verificar si debemos deseleccionar la categoría padre
+          const categoriaPadre = categoriasPadre.find((padre) =>
+            categoriasHijas[padre.id]?.some((hija) => hija.id === categoryId),
+          )
+
+          if (categoriaPadre) {
+            const hermanas = categoriasHijas[categoriaPadre.id] || []
+            const hermanasSeleccionadas = hermanas.filter(
+              (hermana) => newSelected.includes(hermana.id) && hermana.id !== categoryId,
+            )
+
+            // Si no hay hermanas seleccionadas, deseleccionar el padre
+            if (hermanasSeleccionadas.length === 0) {
+              newSelected = newSelected.filter((id) => id !== categoriaPadre.id)
+            }
+          }
+        } else {
+          // Seleccionar la categoría hija
+          newSelected = [...newSelected, categoryId]
+
+          // Seleccionar automáticamente la categoría padre
+          const categoriaPadre = categoriasPadre.find((padre) =>
+            categoriasHijas[padre.id]?.some((hija) => hija.id === categoryId),
+          )
+
+          if (categoriaPadre && !newSelected.includes(categoriaPadre.id)) {
+            newSelected = [...newSelected, categoriaPadre.id]
+          }
+        }
+      }
+
+      // Si no quedan categorías seleccionadas, activar "Todas"
+      if (newSelected.length === 0) {
+        setShowAll(true)
+      }
+
+      // Eliminar duplicados
+      return [...new Set(newSelected)]
+    })
+  }
+
+  // Función para manejar la opción "Todas"
+  const handleToggleAll = () => {
+    if (showAll) {
+      // Si ya está en "Todas", no hacer nada
+      return
+    } else {
+      // Activar "Todas" y limpiar selecciones
+      setShowAll(true)
+      setSelectedCategories([])
+    }
   }
 
   // Filtrar y ordenar productos
   const filteredProducts = productos
     .filter((producto) => {
-      const matchesSearch = producto.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+      const matchesSearch = producto.nombre.toLowerCase().includes(searchTerm.toLowerCase()) // En un futuro podría hacerlo buscando directamente en la bbdd
 
-      // Mejorar el filtro de categorías para incluir tanto padre como hijas
-      let matchesCategory = selectedCategory === "all"
-      if (!matchesCategory && selectedCategory !== "all") {
-        // Si es una categoría padre, incluir todos sus productos hijos
-        const categoriaPadre = categoriasPadre.find((cat) => cat.id === Number.parseInt(selectedCategory))
-        if (categoriaPadre && categoriasHijas[categoriaPadre.id]) {
-          const hijasIds = categoriasHijas[categoriaPadre.id].map((hija) => hija.id)
-          matchesCategory = hijasIds.includes(producto.categoria_id)
-        } else {
-          // Si es una categoría hija, filtrar directamente
-          matchesCategory = producto.categoria_id === Number.parseInt(selectedCategory)
-        }
+      // Filtro de categorías 
+      let matchesCategory = showAll // Si está activada la opción "Todas", mostrar todos
+
+      if (selectedCategories.length > 0) {
+        // Los productos solo pertenecen a categorías hijas
+        matchesCategory = selectedCategories.includes(producto.id_categoria)
       }
 
       const precio = producto.descuento > 0 ? producto.precio * (1 - producto.descuento / 100) : producto.precio
       const matchesPrice = precio >= priceRange[0] && precio <= priceRange[1]
+
       return matchesSearch && matchesCategory && matchesPrice
     })
     .sort((a, b) => {
@@ -181,21 +270,39 @@ export default function LayoutProductos() {
                 Filtros
               </h3>
 
-              {/* Category Filter - Sin componentes inventados */}
+              {/* Category Filter con Checkboxes */}
               <div className="mb-6">
-                <h4 className="font-medium text-gray-700 mb-3">Categoría</h4>
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="font-medium text-gray-700">Categorías</h4>
+                  {selectedCategories.length > 0 && (
+                    <button
+                      onClick={() => {
+                        setSelectedCategories([])
+                        setShowAll(true)
+                      }}
+                      className="text-sm text-[#7912B0] hover:text-[#6a0f9d] transition-colors"
+                    >
+                      Limpiar
+                    </button>
+                  )}
+                </div>
+
                 <div className="space-y-2">
-                  <label className="flex items-center cursor-pointer">
-                    <input
-                      type="radio"
-                      name="category"
-                      value="all"
-                      checked={selectedCategory === "all"}
-                      onChange={(e) => handleCategorySelect(e.target.value)}
-                      className="text-[#7912B0] focus:ring-[#7912B0]"
-                    />
-                    <span className="ml-2 text-gray-700">Todas</span>
-                  </label>
+                  {/* Opción "Todas" */}
+                  <div className="flex items-center cursor-pointer mb-2">
+                    <label className="flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={showAll}
+                        onChange={handleToggleAll}
+                        className="text-[#7912B0] focus:ring-[#7912B0] rounded"
+                      />
+                      <span className="ml-2 font-medium text-gray-800">Todas</span>
+                    </label>
+                  </div>
+
+                  {/* Separador */}
+                  <div className="border-t border-gray-200 my-2"></div>
 
                   {categoriasPadre.map((categoriaPadre) => (
                     <div key={`padre-${categoriaPadre.id}`} className="space-y-2">
@@ -203,12 +310,15 @@ export default function LayoutProductos() {
                       <div className="flex items-center justify-between">
                         <label className="flex items-center cursor-pointer">
                           <input
-                            type="radio"
-                            name="category"
-                            value={categoriaPadre.id.toString()}
-                            checked={selectedCategory === categoriaPadre.id.toString()}
-                            onChange={(e) => handleCategorySelect(e.target.value)}
-                            className="text-[#7912B0] focus:ring-[#7912B0]"
+                            type="checkbox"
+                            checked={isParentFullySelected(categoriaPadre.id)}
+                            ref={(el) => {
+                              if (el) {
+                                el.indeterminate = isParentPartiallySelected(categoriaPadre.id)
+                              }
+                            }}
+                            onChange={() => handleCategoryToggle(categoriaPadre.id, true)}
+                            className="text-[#7912B0] focus:ring-[#7912B0] rounded"
                           />
                           <span className="ml-2 font-medium text-gray-800">{categoriaPadre.nombre}</span>
                         </label>
@@ -226,18 +336,16 @@ export default function LayoutProductos() {
                         )}
                       </div>
 
-                      {/* Categorías Hijas - Sin Collapsible, solo con CSS */}
+                      {/* Categorías Hijas */}
                       {expandedCategories.includes(categoriaPadre.id) && (
                         <div className="ml-6 space-y-2 transition-all duration-200">
                           {categoriasHijas[categoriaPadre.id]?.map((hija) => (
                             <label key={`hija-${hija.id}`} className="flex items-center cursor-pointer">
                               <input
-                                type="radio"
-                                name="category"
-                                value={hija.id.toString()}
-                                checked={selectedCategory === hija.id.toString()}
-                                onChange={(e) => handleCategorySelect(e.target.value)}
-                                className="text-[#7912B0] focus:ring-[#7912B0]"
+                                type="checkbox"
+                                checked={selectedCategories.includes(hija.id)}
+                                onChange={() => handleCategoryToggle(hija.id, false)}
+                                className="text-[#7912B0] focus:ring-[#7912B0] rounded"
                               />
                               <span className="ml-2 text-gray-600">{hija.nombre}</span>
                             </label>
@@ -282,33 +390,29 @@ export default function LayoutProductos() {
                 <div className="space-y-2">
                   <button
                     onClick={() => setSortBy("newest")}
-                    className={`w-full text-left px-3 py-2 rounded transition-colors ${
-                      sortBy === "newest" ? "bg-[#7912B0] text-white" : "hover:bg-gray-100"
-                    }`}
+                    className={`w-full text-left px-3 py-2 rounded transition-colors ${sortBy === "newest" ? "bg-[#7912B0] text-white" : "hover:bg-gray-100"
+                      }`}
                   >
                     Más recientes
                   </button>
                   <button
                     onClick={() => setSortBy("price-low")}
-                    className={`w-full text-left px-3 py-2 rounded transition-colors ${
-                      sortBy === "price-low" ? "bg-[#7912B0] text-white" : "hover:bg-gray-100"
-                    }`}
+                    className={`w-full text-left px-3 py-2 rounded transition-colors ${sortBy === "price-low" ? "bg-[#7912B0] text-white" : "hover:bg-gray-100"
+                      }`}
                   >
                     Precio: menor a mayor
                   </button>
                   <button
                     onClick={() => setSortBy("price-high")}
-                    className={`w-full text-left px-3 py-2 rounded transition-colors ${
-                      sortBy === "price-high" ? "bg-[#7912B0] text-white" : "hover:bg-gray-100"
-                    }`}
+                    className={`w-full text-left px-3 py-2 rounded transition-colors ${sortBy === "price-high" ? "bg-[#7912B0] text-white" : "hover:bg-gray-100"
+                      }`}
                   >
                     Precio: mayor a menor
                   </button>
                   <button
                     onClick={() => setSortBy("name")}
-                    className={`w-full text-left px-3 py-2 rounded transition-colors ${
-                      sortBy === "name" ? "bg-[#7912B0] text-white" : "hover:bg-gray-100"
-                    }`}
+                    className={`w-full text-left px-3 py-2 rounded transition-colors ${sortBy === "name" ? "bg-[#7912B0] text-white" : "hover:bg-gray-100"
+                      }`}
                   >
                     Nombre A-Z
                   </button>
@@ -317,38 +421,19 @@ export default function LayoutProductos() {
             </div>
           </div>
 
-          {/* Products Grid */}
+          {/* Products Grid - Siempre 3 columnas */}
           <div className="lg:w-3/4">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-4">
                 <span className="text-gray-600">{filteredProducts.length} productos encontrados</span>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={() => setViewMode("grid")}
-                  className={`p-2 rounded ${
-                    viewMode === "grid" ? "bg-[#7912B0] text-white" : "text-gray-600 hover:bg-gray-100"
-                  }`}
-                >
-                  <Grid className="h-5 w-5" />
-                </button>
-                <button
-                  onClick={() => setViewMode("list")}
-                  className={`p-2 rounded ${
-                    viewMode === "list" ? "bg-[#7912B0] text-white" : "text-gray-600 hover:bg-gray-100"
-                  }`}
-                >
-                  <List className="h-5 w-5" />
-                </button>
+                {!showAll && selectedCategories.length > 0 && (
+                  <span className="text-sm text-[#7912B0]">({selectedCategories.length} categorías seleccionadas)</span>
+                )}
               </div>
             </div>
 
-            <div
-              className={`grid gap-6 ${
-                viewMode === "grid" ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-3" : "grid-cols-1"
-              }`}
-            >
+            {/* Grid fijo de 3 columnas */}
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {filteredProducts.map((producto) => (
                 <ProductoCard key={producto.id} producto={producto} />
               ))}

@@ -47,7 +47,7 @@ export default function ProductoCard({ producto, onViewDetails }) {
 
         <div className="flex gap-2 mt-4">
           <button
-            onClick={() => {navigate(`/productos/${producto.id}`)}}
+            onClick={() => {navigate(`/producto/${producto.id}`)}}
             className="flex-1 px-4 py-2 border border-[#7912B0] text-[#7912B0] rounded-lg hover:bg-purple-50 transition-colors text-center"
           >
             Ver detalles

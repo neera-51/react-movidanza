@@ -79,8 +79,11 @@ export default function AppRoutes() {
       {/* Layout de Productos */}
       <Route path="/productos" element={<LayoutProductos />} />
 
+      {/* Layout productos filtrando por categoria */}
+      <Route path="/productos/:id" element={<LayoutProductos />} />
+
       {/* Ruta dinámica para producto */}
-      <Route path="/productos/:id" element={<ProductoDetalle />} />
+      <Route path="/producto/:id" element={<ProductoDetalle />} />
 
       {/* Contacto */}
       <Route path="/contacto" element={<ContactoPage />} />
