@@ -121,25 +121,23 @@ export default function FormularioMetodoPago({ onSuccess, onCancel, metodoPago =
     const validarCampos = () => {
         const errores = [];
 
-        // Validar tipo
         if (!['tarjeta', 'paypal'].includes(form.tipo)) {
             errores.push('El tipo de método de pago debe ser "tarjeta" o "paypal".');
         }
 
         if (form.tipo === 'tarjeta') {
-            // Validar nombre del titular (solo letras y hasta 5 palabras)
+            // Validar nombre del titular
             const nombreRegex = /^([a-zA-ZáéíóúÁÉÍÓÚñÑ]+)(\s+[a-zA-ZáéíóúÁÉÍÓÚñÑ]+){0,4}$/;
             if (!nombreRegex.test(form.nombre_titular.trim())) {
                 errores.push('El nombre del titular debe contener solo letras y entre 1 y 5 palabras.');
             }
 
-            // Validar fecha vencimiento MM-YY
+            // Validar fecha de vencimiento
             const fechaRegex = /^(0[1-9]|1[0-2])-(\d{2})$/;
             if (!fechaRegex.test(form.fecha_vencimiento)) {
                 errores.push('La fecha de vencimiento debe estar en formato MM-YY (mes-año).');
             } else {
                 const [mesStr, anioStr] = form.fecha_vencimiento.split('-');
-                const mes = parseInt(mesStr, 10);
                 const anio = parseInt(anioStr, 10);
                 const currentYear = new Date().getFullYear() % 100;
                 if (anio < currentYear) {
@@ -147,20 +145,23 @@ export default function FormularioMetodoPago({ onSuccess, onCancel, metodoPago =
                 }
             }
 
-            // Validar CVV (3 dígitos)
-            if (!/^\d{3}$/.test(form.cvv)) {
-                errores.push('El CVV debe contener exactamente 3 dígitos numéricos.');
-            }
+            // Solo validar estos campos si NO estás en modo edición
+            if (!modoEdicion) {
+                // CVV
+                if (!/^\d{3}$/.test(form.cvv)) {
+                    errores.push('El CVV debe contener exactamente 3 dígitos numéricos.');
+                }
 
-            // Validar token_pago (2 letras + 20 o 22 dígitos)
-            const token = form.token_pago.replace(/\s+/g, '');
-            if (!/^[A-Z]{2}\d{20}$/.test(token) && !/^[A-Z]{2}\d{22}$/.test(token)) {
-                errores.push('El número de tarjeta debe comenzar con 2 letras seguidas de 20 o 22 dígitos numéricos.');
-            }
+                // token_pago
+                const token = form.token_pago.replace(/\s+/g, '');
+                if (!/^[A-Z]{2}\d{20}$/.test(token) && !/^[A-Z]{2}\d{22}$/.test(token)) {
+                    errores.push('El número de tarjeta debe comenzar con 2 letras seguidas de 20 o 22 dígitos numéricos.');
+                }
 
-            // Validar tipo de tarjeta
-            if (!['visa', 'mastercard'].includes(form.tarjeta_tipo.toLowerCase())) {
-                errores.push('El tipo de tarjeta debe ser Visa o Mastercard.');
+                // tipo tarjeta
+                if (!['visa', 'mastercard'].includes(form.tarjeta_tipo.toLowerCase())) {
+                    errores.push('El tipo de tarjeta debe ser Visa o Mastercard.');
+                }
             }
         }
 
@@ -172,6 +173,7 @@ export default function FormularioMetodoPago({ onSuccess, onCancel, metodoPago =
 
         return errores;
     };
+
 
 
     const formatearTokenPago = (valor) => {
@@ -221,6 +223,7 @@ export default function FormularioMetodoPago({ onSuccess, onCancel, metodoPago =
                     return;
                 }
                 datosParaGuardar.fecha_vencimiento = fechaFormateada;
+                datosParaGuardar.token_pago = form.token_pago.replace(/\s+/g, ''); // Sin espacios
 
                 // Eliminar campos no relacionados con tarjeta
                 delete datosParaGuardar.correo_asociado;
@@ -240,12 +243,13 @@ export default function FormularioMetodoPago({ onSuccess, onCancel, metodoPago =
                 await updateMetodoPago(metodoPago.id, datosParaGuardar);
                 idMetodo = metodoPago.id;
             } else {
+                console.log("Formulario:", datosParaGuardar, marcarPredeterminada)
                 const nuevoMetodo = await createMetodoPago({ ...datosParaGuardar, predeterminada: marcarPredeterminada });
                 idMetodo = nuevoMetodo.id;
             }
 
             // Si se marcó como predeterminada, desmarcar las demás (excepto este método)
-            if (form.predeterminada) {
+            if (form.predeterminada && metodos.length > 0) {
                 const otros = metodos.filter(m => m.predeterminada && m.id !== idMetodo);
                 for (const otro of otros) {
                     await updateMetodoPago(otro.id, { predeterminada: false });

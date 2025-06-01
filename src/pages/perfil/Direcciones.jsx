@@ -130,13 +130,13 @@ export default function Direcciones() {
         });
     };
 
-    const handleDeleteCategoria = (id_direccion) => {
+    const handleDeleteDireccion = (id_direccion) => {
         const direccion = direcciones.find((d) => d.id_direccion === id_direccion);
 
-        if (direccion?.predeterminada) {
+/*         if (direccion?.predeterminada) {
             mostrarToast("No puedes eliminar una dirección predeterminada.", "error");
             return;
-        }
+        } */
 
         mostrarConfirmacion({
             title: "Eliminar dirección",
@@ -189,7 +189,7 @@ export default function Direcciones() {
                         {...dir}
                         onSeleccionarPredeterminada={() => manejarSeleccionPredeterminada(dir.id)}
                         onEditar={() => navigate(`/userProfile/direcciones/editar/${dir.id_direccion}`)}
-                        onEliminar={() => handleDeleteCategoria(dir.id_direccion)}
+                        onEliminar={() => handleDeleteDireccion(dir.id_direccion)}
                     />
                 ))}
             </div>

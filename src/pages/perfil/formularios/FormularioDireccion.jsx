@@ -257,7 +257,7 @@ export default function FormularioDireccion({ onSuccess, onCancel, direccion = "
         try {
             const relaciones = await safeGetUsuarioDireccionByUsuarioId(user.id);
             const esPrimeraDireccion = relaciones.length === 0;
-            const marcarPredeterminada = esPrimeraDireccion || predeterminada;
+            const marcarPredeterminada = predeterminada;
 
             const datosParaGuardar = {
                 ...formulario,
@@ -278,17 +278,16 @@ export default function FormularioDireccion({ onSuccess, onCancel, direccion = "
                 idDireccion = direccion.id_direccion;
 
                 // Actualizar relación usuario_direccion predeterminada si aplica
-                if (predeterminada) {
-                    const otras = relaciones.filter(rel => rel.predeterminada && rel.id_direccion !== direccion.id_direccion);
-                    for (const rel of otras) {
-                        await updateUsuarioDireccion(rel.id, { predeterminada: false });
-                    }
+                const otras = relaciones.filter(rel => rel.predeterminada && rel.id_direccion !== direccion.id_direccion);
+                for (const rel of otras) {
+                    await updateUsuarioDireccion(rel.id, { predeterminada: false });
                 }
 
                 await updateUsuarioDireccion(
                     direccion.id,
-                    { predeterminada: marcarPredeterminada }
+                    { predeterminada }
                 );
+
                 await refrescarDirecciones();
 
                 // SOLO si no hubo error, llamamos onSuccess para que el padre maneje el toast y cierre modal
@@ -550,17 +549,7 @@ export default function FormularioDireccion({ onSuccess, onCancel, direccion = "
                         type="checkbox"
                         id="predeterminada"
                         checked={predeterminada}
-                        onChange={(e) => {
-                            const checked = e.target.checked;
-                            if (predeterminada && !checked && otrasPredeterminadas.length === 0) {
-                                mostrarToast(
-                                    "Para desmarcar esta dirección debes marcar otra como predeterminada primero.",
-                                    "error"
-                                );
-                                return;
-                            }
-                            setPredeterminada(checked);
-                        }}
+                        onChange={(e) => setPredeterminada(e.target.checked)}
                         className="accent-[#7912B0] h-4 w-4 rounded border border-gray-300"
                     />
                     <label htmlFor="predeterminada" className="text-sm text-gray-700">
