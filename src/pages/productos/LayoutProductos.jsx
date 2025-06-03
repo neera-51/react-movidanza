@@ -2,8 +2,8 @@ import { Filter, ShoppingCart, Search } from "lucide-react"
 import { useState, useEffect } from "react"
 import ProductoCard from "../../components/ProductoCard"
 import { ChevronDown, ChevronRight } from "lucide-react"
-import useProducto from "../../hooks/useProducto"
-import useCategoria from "../../hooks/useCategoria"
+import useProducto from "../../hooks/api/useProducto"
+import useCategoria from "../../hooks/api/useCategoria"
 
 // TODO No funciona filtar por categorías
 

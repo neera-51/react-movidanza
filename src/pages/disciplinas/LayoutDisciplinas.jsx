@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import useDisciplina from "../../hooks/useDisciplina";
+import useDisciplina from "../../hooks/api/useDisciplina";
 import DisciplinaCard from "../../components/DisciplinaCard";
 
 export default function LayoutDisciplinas() {

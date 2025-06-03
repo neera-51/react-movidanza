@@ -6,8 +6,8 @@ import ConfirmDialog from "../../components/ui/ConfirmDialog";
 import Toast from "../../components/ui/Toast";
 import Modal from "../../components/ui/Modal";
 import FormularioMetodoPago from "./formularios/FormularioMetodoPago";
-import useUser from "../../hooks/useUserAuth";
-import useMetodoPago from "../../hooks/useMetodoPago";
+import useUser from "../../hooks/api/useUserAuth";
+import useMetodoPago from "../../hooks/api/useMetodoPago";
 import { useMatch } from "react-router-dom";
 
 export default function MetodosPago() {

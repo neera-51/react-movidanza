@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ChevronRight } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import useDisciplina from "../../hooks/useDisciplina";
+import useDisciplina from "../../hooks/api/useDisciplina";
 import DisciplinaCard from "../DisciplinaCard";
 
 export default function ClassesSection() {

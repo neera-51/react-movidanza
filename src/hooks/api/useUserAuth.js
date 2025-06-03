@@ -1,6 +1,6 @@
 // src/hooks/useUserAuth.js
 import { useEffect, useState } from "react";
-import api from "../utils/api";
+import api from "../../utils/api";
 
 const useUser = () => {
   const [user, setUser] = useState(null);

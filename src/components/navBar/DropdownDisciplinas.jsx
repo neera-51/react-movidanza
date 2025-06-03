@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import useDisciplina from "../../hooks/useDisciplina";
+import useDisciplina from "../../hooks/api/useDisciplina";
 
 const DropdownDisciplinas = ({ isScrolled }) => {
   const { getAllDisciplinas } = useDisciplina();

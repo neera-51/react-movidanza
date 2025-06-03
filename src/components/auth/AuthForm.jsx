@@ -11,9 +11,9 @@ import {
 } from "../ui/Card"
 import { Input } from "../ui/Input"
 import { Label } from "../ui/Label"
-import useAuth from "../../hooks/useAuth"
-import useUsuario from "../../hooks/useUsuario"
-import useCarrito from "../../hooks/useCarrito"
+import useAuth from "../../hooks/api/useAuth"
+import useUsuario from "../../hooks/api/useUsuario"
+import useCarrito from "../../hooks/api/useCarrito"
 import { Eye, EyeOff } from "lucide-react"
 
 export default function AuthForm({ mode = "login", className, ...props }) {

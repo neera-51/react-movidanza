@@ -1,6 +1,6 @@
 // hooks/useCarritoProducto.js
 
-import api from "../utils/api";
+import api from "../../utils/api";
 
 /**
  * Hook para manejar operaciones relacionadas con los productos del carrito.

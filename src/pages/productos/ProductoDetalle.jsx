@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { Share2, ShoppingCart, Minus, Plus, ArrowLeft } from "lucide-react"
-import useProducto from "../../hooks/useProducto"
+import useProducto from "../../hooks/api/useProducto"
 import FlechaVolver from "../../components/FlechaVolver"
 
 export default function ProductoDetalle() {

@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import useDisciplina from "../../hooks/useDisciplina"
-import useDiaFestivo from "../../hooks/useDiaFestivo"
-import usePeriodoFestivo from "../../hooks/usePeriodoFestivo"
+import useDisciplina from "../../hooks/api/useDisciplina"
+import useDiaFestivo from "../../hooks/api/useDiaFestivo"
+import usePeriodoFestivo from "../../hooks/api/usePeriodoFestivo"
 import { Clock, Euro, Info, Calendar, CalendarDays } from "lucide-react"
 
 const DisciplinaDetalle = () => {

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import useUser from "../../../hooks/useUserAuth";
-import useDireccion from "../../../hooks/useDireccion";
-import useUsuarioDireccion from "../../../hooks/useUsuarioDireccion";
+import useUser from "../../../hooks/api/useUserAuth";
+import useDireccion from "../../../hooks/api/useDireccion";
+import useUsuarioDireccion from "../../../hooks/api/useUsuarioDireccion";
 import Toast from "../../../components/ui/Toast";
 import { Input } from "../../../components/ui/Input";
 import { Button } from "../../../components/ui/Button";

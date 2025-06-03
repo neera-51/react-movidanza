@@ -1,5 +1,5 @@
 // hooks/useUsuarioDireccion.js
-import api from "../utils/api";
+import api from "../../utils/api";
 
 /**
  * Hook para manejar operaciones relacionadas con direcciones de usuario.

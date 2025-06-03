@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import useUser from "../../hooks/useUserAuth";
-import useAuth from "../../hooks/useAuth";
-import useUsuario from "../../hooks/useUsuario";
+import useUser from "../../hooks/api/useUserAuth";
+import useAuth from "../../hooks/api/useAuth";
+import useUsuario from "../../hooks/api/useUsuario";
 import { useNavigate } from "react-router-dom";
 import ConfirmDialog from "../../components/ui/ConfirmDialog";
 import CampoEditable from "../../components/CampoEditable";

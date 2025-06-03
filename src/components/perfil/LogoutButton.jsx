@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useAuth from "@/hooks/useAuth";
+import useAuth from "@/hooks/api/useAuth";
 import ConfirmDialog from "../ui/ConfirmDialog";
 import {
   LogOut,

@@ -1,5 +1,5 @@
 // hooks/useHorarioDisciplina.js
-import api from "../utils/api";
+import api from "../../utils/api";
 
 /** 
  * Hook para manejar las operaciones relacionadas con los horarios y las disciplinas

@@ -1,5 +1,5 @@
 // hooks/useProducto.js
-import api from "../utils/api";
+import api from "../../utils/api";
 
 /**
  * Hook para manejar operaciones relacionadas con productos.

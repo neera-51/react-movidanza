@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation /*, useParams */, Outlet } from "react-router-dom";
-import useUser from "../../hooks/useUserAuth";
-import useUsuarioDireccion from "../../hooks/useUsuarioDireccion";
-import useDireccion from "../../hooks/useDireccion";
+import useUser from "../../hooks/api/useUserAuth";
+import useUsuarioDireccion from "../../hooks/api/useUsuarioDireccion";
+import useDireccion from "../../hooks/api/useDireccion";
 import DireccionCard from "../../components/perfil/DireccionCard";
 import AgregarDireccionCard from "../../components/perfil/AgregarDireccionCard";
 import ConfirmDialog from "../../components/ui/ConfirmDialog";
