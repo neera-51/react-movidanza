@@ -7,7 +7,7 @@ export default function AuthPage() {
   const mode = pathname.includes("registro") ? "register" : "login"
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+    <div className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <AuthForm mode={mode} />
       </div>

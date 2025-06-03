@@ -1,4 +1,5 @@
 import React from "react";
+import { createPortal } from "react-dom"; // Para que se renderice en el body, forzará al modal a aparecer centrado respecto al viewport, no al contenedor actual.
 
 const colorClasses = {
   red: {
@@ -35,7 +36,7 @@ export default function ConfirmDialog({
 
   const btnColor = colorClasses[color] || colorClasses.red;
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded-lg border border-gray-100 shadow-lg max-w-sm mx-auto">
         <h2
@@ -60,6 +61,7 @@ export default function ConfirmDialog({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body // 👈 esto hace que se renderice en <body>
   );
 }

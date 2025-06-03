@@ -3,19 +3,14 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import useDisciplina from "../../hooks/api/useDisciplina"
-import useDiaFestivo from "../../hooks/api/useDiaFestivo"
-import usePeriodoFestivo from "../../hooks/api/usePeriodoFestivo"
-import { Clock, Euro, Info, Calendar, CalendarDays } from "lucide-react"
+import { Clock, Euro, Info } from "lucide-react"
 import { capitalize } from "../../utils/textUtils"
 
 const DisciplinaDetalle = () => {
     const { id } = useParams()
     const { getDisciplinaById } = useDisciplina()
-    const { getAllDiasFestivos } = useDiaFestivo()
-    const { getAllPeriodosFestivos } = usePeriodoFestivo()
+
     const [disciplina, setDisciplina] = useState(null)
-    const [diasFestivos, setDiasFestivos] = useState([])
-    const [periodosFestivos, setPeriodosFestivos] = useState([])
     const [error, setError] = useState(null)
 
     useEffect(() => {
@@ -161,61 +156,7 @@ const DisciplinaDetalle = () => {
                     )}
                 </div>
 
-                {/* Información de Días Festivos y Períodos */}
-                <div className="mt-16 grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
-                    {/* Días Festivos */}
-                    <div>
-                        <div className="flex items-center justify-center gap-3 mb-6">
-                            <Calendar className="h-6 w-6 text-morado" />
-                            <h2 className="text-2xl font-bold text-morado text-center">Días Festivos</h2>
-                        </div>
-                        {diasFestivos.length > 0 ? (
-                            <ul className="space-y-2">
-                                {diasFestivos.map((dia, index) => (
-                                    <li key={index} className="flex items-center text-gray-700 text-lg">
-                                        <span className="w-2 h-2 bg-morado rounded-full mr-3"></span>
-                                        {new Date(dia.fecha).toLocaleDateString("es-ES", {
-                                            day: "numeric",
-                                            month: "long",
-                                        })}{" "}
-                                        - {capitalize(dia.nombre)}
-                                    </li>
-                                ))}
-                            </ul>
-                        ) : (
-                            <p className="text-gray-500 italic text-lg">No hay días festivos registrados.</p>
-                        )}
-                    </div>
 
-                    {/* Períodos Festivos */}
-                    <div>
-                        <div className="flex items-center justify-center gap-3 mb-6">
-                            <CalendarDays className="h-6 w-6 text-morado" />
-                            <h2 className="text-2xl font-bold text-morado">Períodos Festivos</h2>
-                        </div>
-                        {periodosFestivos.length > 0 ? (
-                            <ul className="space-y-2">
-                                {periodosFestivos.map((periodo, index) => (
-                                    <li key={index} className="flex items-center text-gray-700 text-lg">
-                                        <span className="w-2 h-2 bg-morado rounded-full mr-3"></span>
-                                        {new Date(periodo.fecha_inicio).toLocaleDateString("es-ES", {
-                                            day: "numeric",
-                                            month: "long",
-                                        })}{" "}
-                                        -{" "}
-                                        {new Date(periodo.fecha_fin).toLocaleDateString("es-ES", {
-                                            day: "numeric",
-                                            month: "long",
-                                        })}{" "}
-                                        ({capitalize(periodo.nombre)})
-                                    </li>
-                                ))}
-                            </ul>
-                        ) : (
-                            <p className="text-gray-500 italic text-lg">No hay períodos festivos registrados.</p>
-                        )}
-                    </div>
-                </div>
             </div>
         </div>
     )

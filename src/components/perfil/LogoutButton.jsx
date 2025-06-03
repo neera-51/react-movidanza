@@ -29,7 +29,7 @@ export default function LogoutButton() {
     <>
       <button
         onClick={openDialog}
-        className="flex items-center gap-2 w-full px-2 py-1 rounded text-red-600 hover:bg-red-500 hover:text-white"
+        className="flex items-center gap-2 w-full px-2 py-1 rounded text-red-600 hover:bg-red-500 hover:text-white hover:shadow-md"
       >
         <LogOut className="w-4 h-4" />
         Cerrar sesión

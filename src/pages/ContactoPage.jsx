@@ -1,9 +1,46 @@
-import { MapPin, Phone, Mail, Clock } from "lucide-react"
+import { useEffect, useState } from "react"
+import { MapPin, Phone, Mail, Clock, Calendar, CalendarDays } from "lucide-react"
 import { FaTiktok, FaInstagram, FaFacebook } from "react-icons/fa";
 import { SiX } from "react-icons/si";
+import useDiaFestivo from "../hooks/api/useDiaFestivo"
+import usePeriodoFestivo from "../hooks/api/usePeriodoFestivo"
 
 
 export default function ContactPage() {
+
+    const { getAllDiasFestivos } = useDiaFestivo()
+    const { getAllPeriodosFestivos } = usePeriodoFestivo()
+
+
+    const [diasFestivos, setDiasFestivos] = useState([])
+    const [periodosFestivos, setPeriodosFestivos] = useState([])
+    const [error, setError] = useState(null)
+
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [diasData, periodosData] = await Promise.all([
+                    getAllDiasFestivos(),
+                    getAllPeriodosFestivos(),
+                ])
+                setDiasFestivos(diasData)
+                setPeriodosFestivos(periodosData)
+            } catch (err) {
+                setError("No se pudo cargar la información.")
+            }
+        }
+        fetchData()
+    }, [])
+
+    if (error)
+        return (
+            <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white flex items-center justify-center">
+                <p className="text-red-600 text-center text-lg">{error}</p>
+            </div>
+        )
+
+
     return (
         <div className="min-h-screen bg-white pt-20">
             <div className="container mx-auto px-4 py-5 max-w-4xl">
@@ -99,7 +136,7 @@ export default function ContactPage() {
                             href="https://tiktok.com"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="p-3 rounded-full border-2 hover:bg-gray-50 transition-colors"
+                            className="p-3 rounded-full border-2 hover:bg-[#7912B0]/20 transition-colors"
                             style={{ borderColor: "#7912B0" }}
                         >
                             <FaTiktok className="w-6 h-6 text-[#7912B0]" />
@@ -110,7 +147,7 @@ export default function ContactPage() {
                             href="https://instagram.com"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="p-3 rounded-full border-2 hover:bg-gray-50 transition-colors"
+                            className="p-3 rounded-full border-2 hover:bg-[#7912B0]/20 transition-colors"
                             style={{ borderColor: "#7912B0" }}
                         >
                             <FaInstagram className="w-6 h-6 text-[#7912B0]" />
@@ -121,7 +158,7 @@ export default function ContactPage() {
                             href="https://x.com"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="p-3 rounded-full border-2 hover:bg-gray-50 transition-colors"
+                            className="p-3 rounded-full border-2 hover:bg-[#7912B0]/20 transition-colors"
                             style={{ borderColor: "#7912B0" }}
                         >
                             <SiX className="w-6 h-6 text-[#7912B0]" />
@@ -132,7 +169,7 @@ export default function ContactPage() {
                             href="https://facebook.com"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="p-3 rounded-full border-2 hover:bg-gray-50 transition-colors"
+                            className="p-3 rounded-full border-2 hover:bg-[#7912B0]/20 transition-colors"
                             style={{ borderColor: "#7912B0" }}
                         >
                             <FaFacebook className="w-6 h-6 text-[#7912B0]" />
@@ -140,6 +177,64 @@ export default function ContactPage() {
                     </div>
                 </div>
 
+                <h2 className="text-4xl font-bold text-center mb-16 mt-10" style={{ color: "#7912B0" }}>
+                    Calendario
+                </h2>
+                {/* Información de Días Festivos y Períodos */}
+                <div className="mt-16 grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+                    {/* Días Festivos */}
+                    <div>
+                        <div className="flex items-center justify-center gap-3 mb-6">
+                            <Calendar className="h-6 w-6 text-morado" />
+                            <h2 className="text-2xl font-bold text-morado text-center">Días Festivos</h2>
+                        </div>
+                        {diasFestivos.length > 0 ? (
+                            <ul className="space-y-2">
+                                {diasFestivos.map((dia, index) => (
+                                    <li key={index} className="flex items-center text-gray-700 text-lg">
+                                        <span className="w-2 h-2 bg-morado rounded-full mr-3"></span>
+                                        {new Date(dia.fecha).toLocaleDateString("es-ES", {
+                                            day: "numeric",
+                                            month: "long",
+                                        })}{" "}
+                                        - {capitalize(dia.nombre)}
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p className="text-gray-500 italic text-lg">No hay días festivos registrados.</p>
+                        )}
+                    </div>
+
+                    {/* Períodos Festivos */}
+                    <div className="pb-10">
+                        <div className="flex items-center justify-center gap-3 mb-6">
+                            <CalendarDays className="h-6 w-6 text-morado" />
+                            <h2 className="text-2xl font-bold text-morado">Períodos Festivos</h2>
+                        </div>
+                        {periodosFestivos.length > 0 ? (
+                            <ul className="space-y-2">
+                                {periodosFestivos.map((periodo, index) => (
+                                    <li key={index} className="flex items-center text-gray-700 text-lg">
+                                        <span className="w-2 h-2 bg-morado rounded-full mr-3"></span>
+                                        {new Date(periodo.fecha_inicio).toLocaleDateString("es-ES", {
+                                            day: "numeric",
+                                            month: "long",
+                                        })}{" "}
+                                        -{" "}
+                                        {new Date(periodo.fecha_fin).toLocaleDateString("es-ES", {
+                                            day: "numeric",
+                                            month: "long",
+                                        })}{" "}
+                                        ({capitalize(periodo.nombre)})
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p className="text-gray-500 italic text-lg">No hay períodos festivos registrados.</p>
+                        )}
+                    </div>
+                </div>
             </div>
         </div>
     )

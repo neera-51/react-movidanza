@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/noBgColor.png';
 import ProfileButton from './ProfileButton';
 import DropdownCategorias from './DropdownCategorias';
@@ -10,6 +10,8 @@ export default function Navbar() {
   const mobileMenuRef = useRef(null);
   const hamburgerButtonRef = useRef(null);
   const [isScrolled, setIsScrolled] = useState(false);
+
+    const navigate = useNavigate();
 
   // Cierra el menú móvil si se hace clic fuera de él
   useEffect(() => {
@@ -69,18 +71,21 @@ export default function Navbar() {
     >
       {/* Logo */}
       <div className="flex-shrink-0 min-w-[140px] flex justify-center">
-        <Link to="/">
+        <button 
+        onClick={() => {navigate("/")}}>
           <img src={logo} alt="Logo" className="h-11 mx-auto" />
-        </Link>
+        </button>
       </div>
 
       {/* Menú principal - visible solo en desktop */}
       <div className="hidden md:flex justify-center space-x-6 flex-grow">
         <DropdownDisciplinas isScrolled={isScrolled} />
         <DropdownCategorias isScrolled={isScrolled} />
-        <Link to="/contacto" className="self-center px-4 py-2 font-semibold">
+        <button 
+        onClick={() => {navigate("/contacto")}}
+        className="self-center px-4 py-2 font-semibold">
           Contacto
-        </Link>
+        </button>
       </div>
 
       {/* Botón Hamburguesa - visible solo en mobile */}
@@ -119,13 +124,12 @@ export default function Navbar() {
           <div className="flex flex-col items-start gap-6 text-base text-gray-900">
             <DropdownDisciplinas isMobile />
             <DropdownCategorias isMobile />
-            <Link
-              to="/contacto"
+            <button
+              onClick={() => {navigate("/contacto"); setIsMobileMenuOpen(false)}}
               className="font-semibold"
-              onClick={() => setIsMobileMenuOpen(false)}
             >
               Contacto
-            </Link>
+            </button>
 
             <div className="w-full flex justify-start">
               <div className="h-px w-2/3 bg-gray-300 my-2" />

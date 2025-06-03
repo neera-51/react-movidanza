@@ -1,7 +1,6 @@
 import { Filter, ShoppingCart, Search } from "lucide-react"
 import { useState, useEffect } from "react"
 import ProductoCard from "../../components/ProductoCard"
-import { ChevronDown, ChevronRight } from "lucide-react"
 import useProducto from "../../hooks/api/useProducto"
 import useCategoria from "../../hooks/api/useCategoria"
 import useFiltrarProductos from "../../hooks/useFiltrarProductos"
@@ -11,6 +10,7 @@ import { capitalizeAndClean } from "../../utils/textUtils"
 // TODO No funciona filtar por categorías
 
 export default function LayoutProductos() {
+
   const { getAllProductos, getProductosByCategoria } = useProducto()
   const { getAllCategorias, getCategoriasPadre, getCategoriasByIdPadre } =
     useCategoria()
@@ -29,7 +29,6 @@ export default function LayoutProductos() {
   const [selectedCategories, setSelectedCategories] = useState([])
   const [showAll, setShowAll] = useState(true) // Estado para la opción "Todas"
   const [searchTerm, setSearchTerm] = useState("")
-  const [expandedCategories, setExpandedCategories] = useState([])
 
   // Cargar datos iniciales
   useEffect(() => {

@@ -17,7 +17,7 @@ export default function ProfileButton({ className, ...props }) {
     if (user) {
       console.log('Usuario autenticado con ID:', user.id);
       // Si el usuario está autenticado: redirigir al perfil del usuario
-      navigate('/userProfile');
+      navigate('/userProfile', { replace: true }); // Fuerzo la recarga
     } else {
       console.log('Usuario', user);
       // Si el usuario no está autenticado: redirigir al login
