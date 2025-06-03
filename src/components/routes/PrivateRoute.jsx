@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import useUser from '../../hooks/api/useUserAuth';
+import { useUser } from '../../hooks/context/UserContext';
 
 /**
  * PrivateRoute:

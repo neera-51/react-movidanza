@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation /*, useParams */, Outlet } from "react-router-dom";
-import useUser from "../../hooks/api/useUserAuth";
+import { useUser } from "../../hooks/context/UserContext";
 import useUsuarioDireccion from "../../hooks/api/useUsuarioDireccion";
 import useDireccion from "../../hooks/api/useDireccion";
 import DireccionCard from "../../components/perfil/DireccionCard";

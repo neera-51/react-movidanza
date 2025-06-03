@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import useUser from "../../../hooks/api/useUserAuth";
+import { useUser } from "../../../hooks/context/UserContext";
 import useDireccion from "../../../hooks/api/useDireccion";
 import useUsuarioDireccion from "../../../hooks/api/useUsuarioDireccion";
 import Toast from "../../../components/ui/Toast";
@@ -77,11 +77,9 @@ export default function FormularioDireccion({ onSuccess, onCancel, direccion = "
             }
         }
 
-
         // Para todos los demás campos
         setFormulario(prev => ({ ...prev, [name]: value }));
     };
-
 
     const camposObligatorios = [
         "nombre", "apellido", "telefono", "calle_avenida", "numero",
@@ -89,7 +87,6 @@ export default function FormularioDireccion({ onSuccess, onCancel, direccion = "
     ];
 
     const paisesValidos = ["España", /* otros países si hubiera */];
-
 
     const validarCampos = () => {
         for (const campo of camposObligatorios) {
@@ -125,7 +122,6 @@ export default function FormularioDireccion({ onSuccess, onCancel, direccion = "
 
         return true;
     };
-
 
     // Validación extra incluyendo letra sin números ni más de un carácter
     const validarCamposExtra = () => {
@@ -166,8 +162,6 @@ export default function FormularioDireccion({ onSuccess, onCancel, direccion = "
         return true;
     };
 
-
-
     useEffect(() => {
         if (direccion) {
             const formatearTelefono = (numero) => {
@@ -199,8 +193,6 @@ export default function FormularioDireccion({ onSuccess, onCancel, direccion = "
         }
         refrescarDirecciones();
     }, [direccion]);
-
-
 
     // Obtener otras direcciones predeterminadas distintas a la actual
     useEffect(() => {
@@ -240,7 +232,6 @@ export default function FormularioDireccion({ onSuccess, onCancel, direccion = "
 
     const modoEdicion = direccion && direccion.id_direccion;
 
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!validarCampos() || !validarCamposExtra()) return;
@@ -259,7 +250,6 @@ export default function FormularioDireccion({ onSuccess, onCancel, direccion = "
                 piso: formulario.piso === '' ? null : formulario.piso,
                 numero: formulario.numero === '' ? null : formulario.numero,
             };
-
 
             let idDireccion;
 

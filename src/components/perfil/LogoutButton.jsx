@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "@/hooks/api/useAuth";
+import { useUser } from "../../hooks/context/UserContext";
 import ConfirmDialog from "../ui/ConfirmDialog";
 import {
   LogOut,
@@ -10,6 +11,7 @@ export default function LogoutButton() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { logout } = useAuth();
   const navigate = useNavigate();
+  const { setUser } = useUser();
 
   const openDialog = () => setIsDialogOpen(true);
   const closeDialog = () => setIsDialogOpen(false);
@@ -18,7 +20,8 @@ export default function LogoutButton() {
     closeDialog();
     try {
       await logout();
-      // limpiar tokens, estado global, etc si tienes
+      // limpiar tokens, estado global, etc
+      setUser(null);
       navigate("/login", { replace: true });
     } catch (error) {
       console.error("Error al cerrar sesión", error);

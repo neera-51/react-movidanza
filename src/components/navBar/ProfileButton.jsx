@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import RippleButton from '../ui/RippleButton';
-import useUser from '../../hooks/api/useUserAuth';
+import { useUser } from '../../hooks/context/UserContext';
 
 /**
  * Componente ProfileButton

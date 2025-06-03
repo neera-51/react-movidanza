@@ -6,7 +6,7 @@ import ConfirmDialog from "../../components/ui/ConfirmDialog";
 import Toast from "../../components/ui/Toast";
 import Modal from "../../components/ui/Modal";
 import FormularioMetodoPago from "./formularios/FormularioMetodoPago";
-import useUser from "../../hooks/api/useUserAuth";
+import { useUser } from "../../hooks/context/UserContext";
 import useMetodoPago from "../../hooks/api/useMetodoPago";
 import { useMatch } from "react-router-dom";
 
@@ -24,7 +24,6 @@ export default function MetodosPago() {
   const matchEditar = useMatch("/userProfile/metodos_pago/editar/:id");
 
   useEffect(() => {
-    console.log("Usuario:", user);
     if (!checking && user?.id) {
       fetchMetodosPago();
     }
@@ -75,7 +74,6 @@ export default function MetodosPago() {
       setCargando(true);
       try {
         const res = await getMetodoPagoByIdUsuario(user.id);
-        console.log("Métodos de pago:", res);
         setMetodosPago(res);
       } catch (error) {
         console.error("Error al obtener métodos de pago:", error);
@@ -87,7 +85,6 @@ export default function MetodosPago() {
 
 
   // Acciones sobre métodos de pago
-
   const manejarSeleccionPredeterminada = async (idSeleccionado) => {
     mostrarConfirmacion({
       title: "Establecer método predeterminado",

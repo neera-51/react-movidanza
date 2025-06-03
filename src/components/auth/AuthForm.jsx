@@ -1,5 +1,5 @@
-import React, { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
 import { cn } from "../../utils/cn"
 import RippleButton from "../ui/RippleButton"
 import {
@@ -12,6 +12,7 @@ import {
 import { Input } from "../ui/Input"
 import { Label } from "../ui/Label"
 import useAuth from "../../hooks/api/useAuth"
+import { useUser } from "../../hooks/context/UserContext"
 import useUsuario from "../../hooks/api/useUsuario"
 import useCarrito from "../../hooks/api/useCarrito"
 import { Eye, EyeOff } from "lucide-react"
@@ -21,6 +22,7 @@ export default function AuthForm({ mode = "login", className, ...props }) {
   const { login } = useAuth()
   const { createUsuario } = useUsuario()
   const { createCarrito } = useCarrito();
+  const { setUser } = useUser();
   const navigate = useNavigate()
 
   const [nombre, setNombre] = useState("")
@@ -28,42 +30,53 @@ export default function AuthForm({ mode = "login", className, ...props }) {
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [showPassword, setShowPassword] = useState(false)
-  const [carrito, setCarrito] = useState({ id_usuario: "", activo: true })
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setError("")
+    e.preventDefault();
+    setError("");
 
     if (isRegister && nombre.trim() === "") {
-      setError("El nombre es obligatorio")
-      return
+      setError("El nombre es obligatorio");
+      return;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      setError("El correo no tiene un formato válido")
-      return
+      setError("El correo no tiene un formato válido");
+      return;
     }
 
     if (password.length < 6) {
-      setError("La contraseña debe tener al menos 6 caracteres")
-      return
+      setError("La contraseña debe tener al menos 6 caracteres");
+      return;
     }
 
     try {
+      let resultadoUsuario;
+
       if (isRegister) {
-        const resultado = await createUsuario({ nombre, email, password })
+        const resultado = await createUsuario({ nombre, email, password });
         await createCarrito({ id_usuario: resultado.id, activo: true });
-        await login({ email, password })
+        const loginRes = await login({ email, password });
+        resultadoUsuario = loginRes.usuario;
       } else {
-        await login({ email, password })
+        const loginRes = await login({ email, password });
+        resultadoUsuario = loginRes.usuario;
+        console.log(resultadoUsuario)
       }
 
-      navigate("/userProfile")
+      setUser(resultadoUsuario); // actualizo el contexto
+      navigate("/userProfile");
     } catch (err) {
-      setError(err.response?.data?.error || "Error al procesar la solicitud")
+      const mensaje =
+        err.response?.data?.error ||
+        err.response?.data?.message || // por si el backend usa "message"
+        err.message || // fallback para errores como NetworkError
+        "Error al procesar la solicitud";
+      setError(mensaje);
     }
-  }
+
+  };
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>

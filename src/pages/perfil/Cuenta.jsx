@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import useUser from "../../hooks/api/useUserAuth";
+import { useUser } from "../../hooks/context/UserContext";
 import useAuth from "../../hooks/api/useAuth";
 import useUsuario from "../../hooks/api/useUsuario";
 import { useNavigate } from "react-router-dom";
@@ -12,7 +12,7 @@ import { capitalize } from "../../utils/textUtils"
 
 
 export default function Cuenta() {
-  const { user, checking } = useUser();
+  const { user, checking, setUser } = useUser();
   const { getUsuarioById, updateUsuario, deleteUsuario } = useUsuario();
   const { login, logout } = useAuth();
   const navigate = useNavigate();
@@ -275,6 +275,7 @@ export default function Cuenta() {
           await deleteUsuario(user.id);
           showToast("Usuario eliminado correctamente.", "success"); // Mensaje de éxito
           logout();
+          setUser(null)
           navigate("/");
         } catch (e) {
           showToast("Error al eliminar el usuario.", "error");
