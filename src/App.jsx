@@ -1,4 +1,5 @@
 import AppRoutes from './routes/routes'; // Archivo de rutas
+import ScrollToTop from './components/ScrollToTop';
 import Navbar from './components/navBar/Navbar';
 import Footer from './components/Footer';
 
@@ -6,6 +7,7 @@ function App() {
   return (
 
     <>
+    <ScrollToTop/>
 
       <div className="flex flex-col min-h-screen">
         {/* Header */}
