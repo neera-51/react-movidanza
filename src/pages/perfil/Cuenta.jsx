@@ -8,6 +8,8 @@ import CampoEditable from "../../components/CampoEditable";
 import CambioContraseña from "../../components/perfil/CambioContraseña";
 import { Button } from "../../components/ui/Button";
 import Toast from "../../components/ui/Toast";
+import { capitalize } from "../../utils/textUtils"
+
 
 export default function Cuenta() {
   const { user, checking } = useUser();
@@ -154,7 +156,7 @@ export default function Cuenta() {
         return;
       }
 
-      const nombreCapitalizado = capitalizarNombreCompleto(nombreLimpio);
+      const nombreCapitalizado = capitalize(nombreLimpio);
       actualizacion.nombre = nombreCapitalizado;
     }
 
@@ -263,16 +265,6 @@ export default function Cuenta() {
     });
   };
 
-  function capitalizarNombreCompleto(cadena) {
-    return cadena
-      .trim()
-      .toLowerCase()
-      .split(" ")
-      .filter(Boolean) // elimina espacios dobles
-      .map(palabra => palabra.charAt(0).toUpperCase() + palabra.slice(1))
-      .join(" ");
-  }
-
   const handleEliminarUsuario = () => {
     mostrarConfirmacion({
       title: "Eliminar cuenta",
@@ -307,7 +299,7 @@ export default function Cuenta() {
       <CampoEditable
         label="Nombre"
         placeholder="Nombre"
-        valor={capitalizarNombreCompleto(nuevoNombre)}
+        valor={capitalize(nuevoNombre)}
         setValor={(valor) => handleChangeCampo("nombre", valor)}
         campo="nombre"
         editando={editando}

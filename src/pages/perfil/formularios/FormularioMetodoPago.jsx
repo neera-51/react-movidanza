@@ -6,6 +6,7 @@ import Toast from '../../../components/ui/Toast';
 import { Input } from '../../../components/ui/Input';
 import { Button } from '../../../components/ui/Button';
 import { Select } from '../../../components/ui/Select';
+import { capitalize } from "../../../utils/textUtils"
 
 export default function FormularioMetodoPago({ onSuccess, onCancel, metodoPago = null }) {
     const { user } = useUser();
@@ -187,16 +188,6 @@ export default function FormularioMetodoPago({ onSuccess, onCancel, metodoPago =
         return formatted;
     };
 
-    function capitalizarNombreCompleto(cadena) {
-        return cadena
-            .trim()
-            .toLowerCase()
-            .split(" ")
-            .filter(Boolean) // elimina espacios dobles
-            .map(palabra => palabra.charAt(0).toUpperCase() + palabra.slice(1))
-            .join(" ");
-    }
-
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -213,7 +204,7 @@ export default function FormularioMetodoPago({ onSuccess, onCancel, metodoPago =
             const datosParaGuardar = {
                 ...form,
                 id_usuario: user.id,
-                nombre_titular: capitalizarNombreCompleto(form.nombre_titular),
+                nombre_titular: capitalize(form.nombre_titular),
             };
 
             if (form.tipo === 'tarjeta') {

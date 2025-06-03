@@ -6,6 +6,7 @@ import useDisciplina from "../../hooks/api/useDisciplina"
 import useDiaFestivo from "../../hooks/api/useDiaFestivo"
 import usePeriodoFestivo from "../../hooks/api/usePeriodoFestivo"
 import { Clock, Euro, Info, Calendar, CalendarDays } from "lucide-react"
+import { capitalize } from "../../utils/textUtils"
 
 const DisciplinaDetalle = () => {
     const { id } = useParams()
@@ -34,15 +35,6 @@ const DisciplinaDetalle = () => {
         }
         fetchData()
     }, [id])
-
-    // Poner la primera en mayúscula
-    const capitalize = (str) =>
-        str
-            ?.toLowerCase()
-            .split(" ")
-            .filter(Boolean) // elimina espacios dobles
-            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(" ");
 
     // Formatear los horarios para que se muestren horas y min
     const formatTime = (timeString) => {

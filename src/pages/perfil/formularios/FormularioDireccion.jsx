@@ -6,6 +6,7 @@ import useUsuarioDireccion from "../../../hooks/api/useUsuarioDireccion";
 import Toast from "../../../components/ui/Toast";
 import { Input } from "../../../components/ui/Input";
 import { Button } from "../../../components/ui/Button";
+import { capitalize } from "../../../utils/textUtils"
 
 export default function FormularioDireccion({ onSuccess, onCancel, direccion = "" }) {
     const { user } = useUser();
@@ -237,16 +238,6 @@ export default function FormularioDireccion({ onSuccess, onCancel, direccion = "
         }
     }
 
-    function capitalizarNombreCompleto(cadena) {
-        return cadena
-            .trim()
-            .toLowerCase()
-            .split(" ")
-            .filter(Boolean) // elimina espacios dobles
-            .map(palabra => palabra.charAt(0).toUpperCase() + palabra.slice(1))
-            .join(" ");
-    }
-
     const modoEdicion = direccion && direccion.id_direccion;
 
 
@@ -262,8 +253,8 @@ export default function FormularioDireccion({ onSuccess, onCancel, direccion = "
             const datosParaGuardar = {
                 ...formulario,
                 pais: "España",
-                nombre: capitalizarNombreCompleto(formulario.nombre),
-                apellido: capitalizarNombreCompleto(formulario.apellido),
+                nombre: capitalize(formulario.nombre),
+                apellido: capitalize(formulario.apellido),
                 telefono: formulario.telefono.replace(/\s+/g, ""),
                 piso: formulario.piso === '' ? null : formulario.piso,
                 numero: formulario.numero === '' ? null : formulario.numero,
@@ -298,8 +289,8 @@ export default function FormularioDireccion({ onSuccess, onCancel, direccion = "
 
                 const datosParaGuardar = {
                     ...formulario,
-                    nombre: capitalizarNombreCompleto(formulario.nombre),
-                    apellido: capitalizarNombreCompleto(formulario.apellido),
+                    nombre: capitalize(formulario.nombre),
+                    apellido: capitalize(formulario.apellido),
                     telefono: formulario.telefono.replace(/\s+/g, ""),
                     piso: formulario.piso === '' ? null : formulario.piso,
                     numero: formulario.numero === '' ? null : formulario.numero,
