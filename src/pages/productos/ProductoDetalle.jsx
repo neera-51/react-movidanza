@@ -2,11 +2,9 @@ import { useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { Share2, ShoppingCart, Minus, Plus, ArrowLeft } from "lucide-react"
 import useProducto from "../../hooks/api/useProducto"
-import FlechaVolver from "../../components/FlechaVolver"
 
 export default function ProductoDetalle() {
     const { id } = useParams()
-    const [modalQuantity, setModalQuantity] = useState(1)
     const [producto, setProducto] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState("")
@@ -16,7 +14,6 @@ export default function ProductoDetalle() {
 
         const fetchData = async () => {
             try {
-                console.log("Parámetro ID:", id);
                 const data = await getProductoById(id);
                 setProducto(data);
                 setLoading(false)
@@ -45,18 +42,6 @@ export default function ProductoDetalle() {
     }
     const tieneDescuento = producto.descuento > 0
     const precioDescuento = tieneDescuento ? producto.precio * (1 - producto.descuento / 100) : producto.precio
-
-    const increaseQuantity = () => {
-        if (modalQuantity < (producto.stock || 99)) {
-            setModalQuantity(modalQuantity + 1)
-        }
-    }
-
-    const decreaseQuantity = () => {
-        if (modalQuantity > 1) {
-            setModalQuantity(modalQuantity - 1)
-        }
-    }
 
     return (
         <div className="min-h-screen bg-gray-50 pt-20">
@@ -131,17 +116,6 @@ export default function ProductoDetalle() {
                                             </span>
                                         )}
                                     </div>
-                                    {/* {tieneDescuento && (
-                                        <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                                            <span className="text-red-600 font-medium">
-                                                ¡Ahorra{" "}
-                                                {(producto.precio - precioDescuento).toLocaleString("es-ES", {
-                                                    minimumFractionDigits: 2,
-                                                    maximumFractionDigits: 2,
-                                                })}€ con este descuento!
-                                            </span>
-                                        </div>
-                                    )} */}
                                 </div>
 
                                 {/* Descripción */}
@@ -200,12 +174,7 @@ export default function ProductoDetalle() {
                                     </div>
                                 ) : (<div className="flex flex-col sm:flex-row gap-4">
                                     <button
-                                        onClick={() => {
-                                            // Lógica para agregar al carrito
-                                            console.log(`Agregando ${modalQuantity} unidades del producto ${producto.id} al carrito`)
-                                        }}
                                         className="flex-1 bg-[#7912B0] text-white px-8 py-4 rounded-lg hover:bg-[#6a0f9d] transition-colors flex items-center justify-center space-x-2 font-medium"
-                                        disabled={!producto.stock || producto.stock === 0}
                                     >
                                         <ShoppingCart className="h-5 w-5" />
                                         <span>Agregar al carrito</span>

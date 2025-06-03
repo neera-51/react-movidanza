@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from 'react-router-dom';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import useDisciplina from "../../hooks/api/useDisciplina";
 
 const DropdownDisciplinas = ({ isScrolled }) => {
@@ -9,6 +10,8 @@ const DropdownDisciplinas = ({ isScrolled }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768); // Detectar móvil
 
   const navigate = useNavigate()
+  const location = useLocation();
+  const currentPath = location.pathname;
 
   const dropdownRef = useRef(null);
 
@@ -58,8 +61,8 @@ const DropdownDisciplinas = ({ isScrolled }) => {
           className="w-full flex justify-between items-center font-semibold text-gray-800"
         >
           <span
-            onClick={() => { navigate("/disciplinas"); setIsOpen(false)}}
-            className="cursor-pointer"
+            onClick={() => { navigate("/disciplinas"); setIsOpen(false) }}
+            className="cursor-pointer !hover:underline"
           >
             Disciplinas
           </span>
@@ -72,7 +75,7 @@ const DropdownDisciplinas = ({ isScrolled }) => {
               {disciplinas.map((disciplina) => (
                 <li key={disciplina.id}>
                   <button
-                    onClick={() => {navigate(`/disciplina/${disciplina.id}`); setIsOpen(false)}}
+                    onClick={() => { navigate(`/disciplina/${disciplina.id}`); setIsOpen(false) }}
                     className="block text-gray-700 py-1 hover:underline"
                   >
                     {disciplina.nombre}
@@ -91,9 +94,10 @@ const DropdownDisciplinas = ({ isScrolled }) => {
     <div ref={dropdownRef} className="min-w-[120px] flex items-center justify-center m-0 p-0">
       <button
         onClick={toggleDropdown}
-        className="px-4 py-2 font-semibold hover:text-gray-800 transition flex items-center justify-center w-full"
+        className={` px-4 py-2 font-semibold hover:text-gray-800 transition flex items-center justify-center w-full ${currentPath === "/disciplinas" ? " underline underline-offset-7" : ""}`}
       >
         Disciplinas
+        {isOpen ? <ChevronUp className="ml-2 w-4 h-4" /> : <ChevronDown className="ml-2 w-4 h-4" />}
       </button>
 
       <div
@@ -121,7 +125,7 @@ const DropdownDisciplinas = ({ isScrolled }) => {
                     .map((disciplina) => (
                       <li key={disciplina.id}>
                         <button
-                          onClick={() => {navigate(`/disciplina/${disciplina.id}`); setIsOpen(false)} }
+                          onClick={() => { navigate(`/disciplina/${disciplina.id}`); setIsOpen(false) }}
                           className="block py-1 text-gray-800 hover:underline"
                         >
                           {disciplina.nombre}

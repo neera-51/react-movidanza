@@ -16,20 +16,15 @@ const DisciplinaDetalle = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [disciplinaData, diasData, periodosData] = await Promise.all([
-                    getDisciplinaById(id),
-                    getAllDiasFestivos(),
-                    getAllPeriodosFestivos(),
-                ])
-                setDisciplina(disciplinaData)
-                setDiasFestivos(diasData)
-                setPeriodosFestivos(periodosData)
+                const disciplinaData = await getDisciplinaById(id);
+                setDisciplina(disciplinaData);
             } catch (err) {
-                setError("No se pudo cargar la información.")
+                setError("No se pudo cargar la información.");
             }
-        }
-        fetchData()
-    }, [id])
+        };
+        fetchData();
+    }, [id]);
+
 
     // Formatear los horarios para que se muestren horas y min
     const formatTime = (timeString) => {
@@ -55,7 +50,7 @@ const DisciplinaDetalle = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
-            <div className="container mx-auto px-4 pt-32 pb-16">
+            <div className="container mx-auto px-4 pt-42 pb-16">
 
 
                 <div className="grid lg:grid-cols-2 gap-16 max-w-7xl mx-auto">

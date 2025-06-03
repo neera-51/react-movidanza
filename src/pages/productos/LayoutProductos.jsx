@@ -102,7 +102,7 @@ export default function LayoutProductos() {
   }
 
   return (
-    <div id="layout-productos" className="pt-20 min-h-screen bg-gray-50">
+    <div id="layout-productos" className="pt-20 min-h-screen ">
       {/* Header */}
       <div className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-6">

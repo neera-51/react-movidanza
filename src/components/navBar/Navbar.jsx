@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import logo from '../../assets/noBgColor.png';
 import ProfileButton from './ProfileButton';
-import DropdownCategorias from './DropdownCategorias';
 import DropdownDisciplinas from './DropdownDisciplinas';
 
 export default function Navbar() {
@@ -11,7 +10,10 @@ export default function Navbar() {
   const hamburgerButtonRef = useRef(null);
   const [isScrolled, setIsScrolled] = useState(false);
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const currentPath = location.pathname;
+
 
   // Cierra el menú móvil si se hace clic fuera de él
   useEffect(() => {
@@ -65,14 +67,13 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`navbar fixed top-0 w-full flex items-center justify-between px-6 transition-all duration-300 z-50 ${
-        isScrolled ? 'bg-white shadow-md h-16' : 'bg-white/30 h-20'
-      }`}
+      className={`navbar fixed top-0 w-full flex items-center justify-between px-6 transition-all duration-300 z-50 ${isScrolled ? 'bg-white shadow-md h-16' : 'bg-white/30 h-20'
+        }`}
     >
       {/* Logo */}
       <div className="flex-shrink-0 min-w-[140px] flex justify-center">
-        <button 
-        onClick={() => {navigate("/")}}>
+        <button
+          onClick={() => { navigate("/") }}>
           <img src={logo} alt="Logo" className="h-11 mx-auto" />
         </button>
       </div>
@@ -80,10 +81,17 @@ export default function Navbar() {
       {/* Menú principal - visible solo en desktop */}
       <div className="hidden md:flex justify-center space-x-6 flex-grow">
         <DropdownDisciplinas isScrolled={isScrolled} />
-        <DropdownCategorias isScrolled={isScrolled} />
-        <button 
-        onClick={() => {navigate("/contacto")}}
-        className="self-center px-4 py-2 font-semibold">
+        <button
+          className={` mr-0 px-4 py-2 font-semibold ${currentPath === "/productos" ? " underline underline-offset-7" : ""}`}
+          onClick={() => navigate("/productos")}
+        >
+          Tienda
+        </button>
+
+        <button
+          onClick={() => { navigate("/contacto") }}
+          className={` px-4 py-2 font-semibold ${currentPath === "/contacto" ? " underline underline-offset-7" : ""}`}
+        >
           Contacto
         </button>
       </div>
@@ -123,9 +131,14 @@ export default function Navbar() {
 
           <div className="flex flex-col items-start gap-6 text-base text-gray-900">
             <DropdownDisciplinas isMobile />
-            <DropdownCategorias isMobile />
             <button
-              onClick={() => {navigate("/contacto"); setIsMobileMenuOpen(false)}}
+              className="font-semibold"
+              onClick={() => { navigate("/productos"); setIsMobileMenuOpen(false) }}
+            >
+              Tienda
+            </button>
+            <button
+              onClick={() => { navigate("/contacto"); setIsMobileMenuOpen(false) }}
               className="font-semibold"
             >
               Contacto
