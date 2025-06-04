@@ -70,7 +70,6 @@ export default function AuthForm({ mode = "login", className, ...props }) {
       } else {
         const loginRes = await login({ email, password });
         resultadoUsuario = loginRes.usuario;
-        console.log(resultadoUsuario)
       }
 
       setUser(resultadoUsuario); // actualizo el contexto

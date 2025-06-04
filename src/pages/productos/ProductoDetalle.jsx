@@ -1,7 +1,13 @@
 import { useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
-import { Share2, ShoppingCart, Minus, Plus, ArrowLeft } from "lucide-react"
+import { Share2, ShoppingCart } from "lucide-react"
 import useProducto from "../../hooks/api/useProducto"
+
+import { useUser } from "../../hooks/context/UserContext" // Para obtener el id del usuario
+import useCarrito from "../../hooks/api/useCarrito" // Obtener el id del carrito
+import useCarritoProducto from "../../hooks/api/useCarritoProducto" // Agregar porductos al carrito
+import Toast from "../../components/ui/Toast"
+import { capitalizeAndClean } from "../../utils/textUtils"
 
 export default function ProductoDetalle() {
     const { id } = useParams()
@@ -9,6 +15,31 @@ export default function ProductoDetalle() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState("")
     const { getProductoById } = useProducto()
+    const { user, checking } = useUser()
+    const { getCarritosByIdUsuario } = useCarrito()
+    const { getCarritoProductoByIdCarrito, createCarritoProducto, updateCarritoProducto } = useCarritoProducto()
+
+    // Estado para manejar Toast
+    const [toastState, setToastState] = useState({
+        visible: false,
+        mensaje: "",
+        tipo: "success",
+    })
+
+    const showToast = (msg, tipo = "success") => {
+        setToastState({
+            visible: true,
+            mensaje: msg,
+            tipo: tipo,
+        })
+    }
+
+    const hideToast = () => {
+        setToastState((prev) => ({
+            ...prev,
+            visible: false,
+        }))
+    }
 
     useEffect(() => {
 
@@ -43,8 +74,64 @@ export default function ProductoDetalle() {
     const tieneDescuento = producto.descuento > 0
     const precioDescuento = tieneDescuento ? producto.precio * (1 - producto.descuento / 100) : producto.precio
 
+    const handleAgregarAlCarrito = async (producto) => {
+        try {
+            if (checking) return;
+            if (!user) {
+                showToast("Debes iniciar sesión para agregar productos al carrito", "error")
+                return
+            }
+
+            // 1. Obtener carrito del usuario
+            const carritos = await getCarritosByIdUsuario(user.id)
+            const carritoActual = carritos[0] // Asumiendo que hay uno solo
+
+            if (!carritoActual) {
+                showToast("No se encontró un carrito para este usuario", "error")
+                return
+            }
+
+            // 2. Obtener si el producto ya está en el carrito
+            const productosCarrito = await getCarritoProductoByIdCarrito(carritoActual.id)
+            const existente = productosCarrito.find((cp) => cp.id_producto === producto.id)
+
+            if (existente) {
+                // 3. Si existe, verificar stock antes de sumar
+                if (existente.cantidad >= producto.stock) {
+                    showToast(`Stock agotado. Ya tienes ${existente.cantidad} en el carrito`, "error")
+                    return
+                }
+
+                await updateCarritoProducto(existente.id, {
+                    cantidad: existente.cantidad + 1,
+                })
+                showToast(`Ahora tienes ${existente.cantidad + 1} unidad${existente.cantidad + 1 > 1 ? 'es' : ''} en tu carrito`, "success")
+            } else {
+                // 4. Si no existe, crearlo
+                if (producto.stock < 1) {
+                    console.log("Este producto está fuera de stock", "error")
+                    return
+                }
+
+                await createCarritoProducto({
+                    id_carrito: carritoActual.id,
+                    id_producto: producto.id,
+                    cantidad: 1,
+                })
+                showToast(`${capitalizeAndClean(producto.nombre)} agregado al carrito`, "success")
+            }
+
+            setError(null) // Limpiar errores si todo va bien
+        } catch (err) {
+            console.error("Error al agregar al carrito:", err)
+            showToast("Error al agregar el producto al carrito", "error")
+        }
+    }
+
     return (
         <div className="min-h-screen bg-gray-50 pt-20">
+            {/* Toast Component */}
+            {toastState.visible && <Toast mensaje={toastState.mensaje} tipo={toastState.tipo} onClose={hideToast} />}
             {/* Contenido principal */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="overflow-hidden">
@@ -175,6 +262,7 @@ export default function ProductoDetalle() {
                                 ) : (<div className="flex flex-col sm:flex-row gap-4">
                                     <button
                                         className="flex-1 bg-[#7912B0] text-white px-8 py-4 rounded-lg hover:bg-[#6a0f9d] transition-colors flex items-center justify-center space-x-2 font-medium"
+                                        onClick={() => handleAgregarAlCarrito(producto)}
                                     >
                                         <ShoppingCart className="h-5 w-5" />
                                         <span>Agregar al carrito</span>

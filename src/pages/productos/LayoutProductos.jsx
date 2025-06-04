@@ -1,5 +1,3 @@
-"use client"
-
 import { ShoppingCart, Search } from "lucide-react"
 import { useState, useEffect } from "react"
 import ProductoCard from "../../components/ProductoCard"
@@ -35,10 +33,6 @@ export default function LayoutProductos() {
   const [selectedCategories, setSelectedCategories] = useState([])
   const [showAll, setShowAll] = useState(true) // Estado para la opción "Todas"
   const [searchTerm, setSearchTerm] = useState("")
-
-  // Estados para agregar al carrito
-  const [carrito, setCarrito] = useState([])
-  const [carritoProducto, setCarritoProducto] = useState([])
 
   // Estado para manejar Toast
   const [toastState, setToastState] = useState({
@@ -100,6 +94,7 @@ export default function LayoutProductos() {
 
   const handleAgregarAlCarrito = async (producto) => {
     try {
+      if (checking) return;
       if (!user) {
         showToast("Debes iniciar sesión para agregar productos al carrito", "error")
         return
@@ -141,8 +136,7 @@ export default function LayoutProductos() {
           id_producto: producto.id,
           cantidad: 1,
         })
-
-        showToast(`${producto.nombre} agregado al carrito`, "success")
+        showToast(`${capitalizeAndClean(producto.nombre)} agregado al carrito`, "success")
       }
 
       setError(null) // Limpiar errores si todo va bien
@@ -204,12 +198,7 @@ export default function LayoutProductos() {
               <h1 className="text-3xl font-bold text-gray-800">Nuestros Productos</h1>
               <p className="text-gray-600 mt-1">Equipamiento y accesorios para pole dance</p>
             </div>
-            <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-600">Carrito:</span>
-              <div className="relative">
-                <ShoppingCart className="h-6 w-6 text-[#7912B0]" />
-              </div>
-            </div>
+
           </div>
 
           {/* Search Bar */}

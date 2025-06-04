@@ -11,13 +11,14 @@ import Direcciones from '../pages/perfil/Direcciones';
 import FormularioDireccion from '../pages/perfil/formularios/FormularioDireccion';
 import MetodosPago from '../pages/perfil/MetodosPago';
 import FormularioMetodoPago from '../pages/perfil/formularios/FormularioMetodoPago';
-import Carrito from '../pages/perfil/Carrito';
 import Pedidos from '../pages/perfil/PedidosRealizados';
 
 import LayoutDisciplinas from '../pages/disciplinas/LayoutDisciplinas';
 import LayoutProductos from '../pages/productos/LayoutProductos';
 import ProductoDetalle from '../pages/productos/ProductoDetalle';
 import ContactoPage from '../pages/ContactoPage';
+
+import LayoutCarrito from '../pages/LayoutCarrito';
 
 export default function AppRoutes() {
   return (
@@ -72,7 +73,6 @@ export default function AppRoutes() {
           <Route path="editar/:id" element={<FormularioMetodoPago />} />
         </Route>
 
-        <Route path="carrito" element={<Carrito />} />
         <Route path="pedidos" element={<Pedidos />} />
       </Route>
 
@@ -88,8 +88,12 @@ export default function AppRoutes() {
       {/* Contacto */}
       <Route path="/contacto" element={<ContactoPage />} />
 
+      {/* Carrito, solo usuarios autenticados */}
+      <Route
+        path="/carrito"
+        element={ <LayoutCarrito /> } />
 
-        {/* Ruta catch-all */}
+      {/* Ruta catch-all */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

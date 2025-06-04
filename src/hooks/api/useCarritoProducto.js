@@ -43,13 +43,20 @@ const useCarritoProducto = () => {
     return response.data;
   };
 
+  /** Vacía el carrito: elimina todos los productos de un carrito determinado */
+    const deleteCarritoProductosByIdCarrito = async (id) => {
+    const response = await api.delete(`/carritoproducto/carrito/${id}`);
+    return response.data;
+  };
+
   return {
     getAllCarritoProducto,
     getCarritoProductoByIdCarrito,
     getCarritoProductoById,
     createCarritoProducto,
     updateCarritoProducto,
-    deleteCarritoProducto
+    deleteCarritoProducto,
+    deleteCarritoProductosByIdCarrito
   };
 
 };

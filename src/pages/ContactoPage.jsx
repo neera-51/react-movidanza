@@ -42,7 +42,7 @@ export default function ContactPage() {
 
 
     return (
-        <div className="min-h-screen bg-white pt-20">
+        <div className="min-h-screen bg-white/20 pt-20">
             <div className="container mx-auto px-4 py-5 max-w-4xl">
                 {/* Título */}
                 <h1 className="text-4xl font-bold text-center mb-16" style={{ color: "#7912B0" }}>

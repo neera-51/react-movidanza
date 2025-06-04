@@ -15,7 +15,6 @@ export default function LayoutPerfil() {
     { path: "cuenta", label: "Cuenta", icon: User },
     { path: "direcciones", label: "Direcciones", icon: MapPin },
     { path: "metodos_pago", label: "Métodos de pago", icon: CreditCard },
-    { path: "carrito", label: "Carrito", icon: ShoppingCart },
     { path: "pedidos", label: "Pedidos realizados", icon: PackageCheck },
   ]
 

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { ShoppingCart } from "lucide-react"
 import logo from '../../assets/noBgColor.png';
 import ProfileButton from './ProfileButton';
 import DropdownDisciplinas from './DropdownDisciplinas';
@@ -110,6 +111,15 @@ export default function Navbar() {
         </button>
       </div>
 
+      <div className="flex-shrink-0 min-w-[140px] hidden md:flex justify-center">
+        <button
+          onClick={() => navigate("/carrito")}
+          className="flex items-center space-x-2 hover:bg-[#7912B0]/10 px-3 py-2 rounded-xl transition-colors"
+        >
+          <ShoppingCart className="h-6 w-6 text-[#7912B0]" />
+        </button>
+      </div>
+
       {/* Perfil (desktop) */}
       <div className="flex-shrink-0 min-w-[140px] hidden md:flex justify-center">
         <ProfileButton />
@@ -132,17 +142,27 @@ export default function Navbar() {
           <div className="flex flex-col items-start gap-6 text-base text-gray-900">
             <DropdownDisciplinas isMobile />
             <button
-              className="font-semibold"
+              className="font-semibold hover:underline underline-offset-5"
               onClick={() => { navigate("/productos"); setIsMobileMenuOpen(false) }}
             >
               Tienda
             </button>
             <button
               onClick={() => { navigate("/contacto"); setIsMobileMenuOpen(false) }}
-              className="font-semibold"
+              className="font-semibold hover:underline underline-offset-5"
             >
               Contacto
             </button>
+
+            <button
+              onClick={() => { navigate("/carrito"); setIsMobileMenuOpen(false); }}
+              className="flex items-center space-x-2 py-2 rounded-xl transition-colors"
+            >
+              <span className="font-semibold hover:underline underline-offset-5">Carrito</span>
+              <ShoppingCart className="h-6 w-6 text-[#7912B0]" />
+
+            </button>
+
 
             <div className="w-full flex justify-start">
               <div className="h-px w-2/3 bg-gray-300 my-2" />

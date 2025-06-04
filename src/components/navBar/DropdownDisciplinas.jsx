@@ -58,11 +58,11 @@ const DropdownDisciplinas = ({ isScrolled }) => {
       <div className="w-full">
         <button
           onClick={toggleDropdown}
-          className="w-full flex justify-between items-center font-semibold text-gray-800"
+          className="w-full flex justify-between items-center font-semibold"
         >
           <span
             onClick={() => { navigate("/disciplinas"); setIsOpen(false) }}
-            className="cursor-pointer !hover:underline"
+            className="cursor-pointer"
           >
             Disciplinas
           </span>
