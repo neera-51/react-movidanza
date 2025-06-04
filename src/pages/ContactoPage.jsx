@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { MapPin, Phone, Mail, Clock, Calendar, CalendarDays } from "lucide-react"
 import { FaTiktok, FaInstagram, FaFacebook } from "react-icons/fa";
 import { SiX } from "react-icons/si";
+import { capitalize } from "../utils/textUtils"
 import useDiaFestivo from "../hooks/api/useDiaFestivo"
 import usePeriodoFestivo from "../hooks/api/usePeriodoFestivo"
 
@@ -42,7 +43,7 @@ export default function ContactPage() {
 
 
     return (
-        <div className="min-h-screen bg-white/20 pt-20">
+        <div className="min-h-screen bg-white/30 pt-20">
             <div className="container mx-auto px-4 py-5 max-w-4xl">
                 {/* Título */}
                 <h1 className="text-4xl font-bold text-center mb-16" style={{ color: "#7912B0" }}>
@@ -181,7 +182,7 @@ export default function ContactPage() {
                     Calendario
                 </h2>
                 {/* Información de Días Festivos y Períodos */}
-                <div className="mt-16 grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+                <div className="mt-16 grid md:grid-cols-2 gap-12 max-w-6xl mx-auto pb-15">
                     {/* Días Festivos */}
                     <div>
                         <div className="flex items-center justify-center gap-3 mb-6">
@@ -197,7 +198,7 @@ export default function ContactPage() {
                                             day: "numeric",
                                             month: "long",
                                         })}{" "}
-                                        - {capitalize(dia.nombre)}
+                                        - {capitalize(dia.motivo)}
                                     </li>
                                 ))}
                             </ul>
@@ -207,7 +208,7 @@ export default function ContactPage() {
                     </div>
 
                     {/* Períodos Festivos */}
-                    <div className="pb-10">
+                    <div>
                         <div className="flex items-center justify-center gap-3 mb-6">
                             <CalendarDays className="h-6 w-6 text-morado" />
                             <h2 className="text-2xl font-bold text-morado">Períodos Festivos</h2>
@@ -226,7 +227,7 @@ export default function ContactPage() {
                                             day: "numeric",
                                             month: "long",
                                         })}{" "}
-                                        ({capitalize(periodo.nombre)})
+                                        ({capitalize(periodo.motivo)})
                                     </li>
                                 ))}
                             </ul>

@@ -62,7 +62,7 @@ export default function AuthForm({ mode = "login", className, ...props }) {
         } catch (errorCarrito){
           // Si falla la creación del carrito, elimino el usuario creado
           await deleteUsuario(resultado.id);
-          throw new Error("Error al crear el carrito. Registro cancelado.", errorCarrito);
+          throw new Error(`Error al crear el carrito. Registro cancelado. Detalles: ${errorCarrito.message}`);
         }
 
         const loginRes = await login({ email, password });

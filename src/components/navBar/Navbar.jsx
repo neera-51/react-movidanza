@@ -111,17 +111,14 @@ export default function Navbar() {
         </button>
       </div>
 
-      <div className="flex-shrink-0 min-w-[140px] hidden md:flex justify-center">
+      {/* Perfil (desktop) */}
+      <div className="flex-shrink-0 min-w-[140px] hidden md:flex justify-center gap-2">
         <button
           onClick={() => navigate("/carrito")}
           className="flex items-center space-x-2 hover:bg-[#7912B0]/10 px-3 py-2 rounded-xl transition-colors"
         >
           <ShoppingCart className="h-6 w-6 text-[#7912B0]" />
         </button>
-      </div>
-
-      {/* Perfil (desktop) */}
-      <div className="flex-shrink-0 min-w-[140px] hidden md:flex justify-center">
         <ProfileButton />
       </div>
 
