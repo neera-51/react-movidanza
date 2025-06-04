@@ -1,4 +1,6 @@
-import { Filter, ShoppingCart, Search } from "lucide-react"
+"use client"
+
+import { ShoppingCart, Search } from "lucide-react"
 import { useState, useEffect } from "react"
 import ProductoCard from "../../components/ProductoCard"
 import useProducto from "../../hooks/api/useProducto"
@@ -7,13 +9,17 @@ import useFiltrarProductos from "../../hooks/useFiltrarProductos"
 import SidebarFiltros from "../../components/productos/SidebarFiltros"
 import { capitalizeAndClean } from "../../utils/textUtils"
 
-// TODO No funciona filtar por categorías
+import { useUser } from "../../hooks/context/UserContext" // Para obtener el id del usuario
+import useCarrito from "../../hooks/api/useCarrito" // Obtener el id del carrito
+import useCarritoProducto from "../../hooks/api/useCarritoProducto" // Agregar porductos al carrito
+import Toast from "../../components/ui/Toast"
 
 export default function LayoutProductos() {
-
   const { getAllProductos, getProductosByCategoria } = useProducto()
-  const { getAllCategorias, getCategoriasPadre, getCategoriasByIdPadre } =
-    useCategoria()
+  const { getAllCategorias, getCategoriasPadre, getCategoriasByIdPadre } = useCategoria()
+  const { user, checking } = useUser()
+  const { getCarritosByIdUsuario } = useCarrito()
+  const { getCarritoProductoByIdCarrito, createCarritoProducto, updateCarritoProducto } = useCarritoProducto()
 
   // Estados principales
   const [productos, setProductos] = useState([])
@@ -30,6 +36,32 @@ export default function LayoutProductos() {
   const [showAll, setShowAll] = useState(true) // Estado para la opción "Todas"
   const [searchTerm, setSearchTerm] = useState("")
 
+  // Estados para agregar al carrito
+  const [carrito, setCarrito] = useState([])
+  const [carritoProducto, setCarritoProducto] = useState([])
+
+  // Estado para manejar Toast
+  const [toastState, setToastState] = useState({
+    visible: false,
+    mensaje: "",
+    tipo: "success",
+  })
+
+  const showToast = (msg, tipo = "success") => {
+    setToastState({
+      visible: true,
+      mensaje: msg,
+      tipo: tipo,
+    })
+  }
+
+  const hideToast = () => {
+    setToastState((prev) => ({
+      ...prev,
+      visible: false,
+    }))
+  }
+
   // Cargar datos iniciales
   useEffect(() => {
     const fetchData = async () => {
@@ -45,12 +77,16 @@ export default function LayoutProductos() {
         setCategorias(categoriasData)
         setCategoriasPadre(categoriasPadreData)
 
-        // Cargar categorías hijas para cada categoría padre
+        const hijasPromises = categoriasPadreData.map((padre) => getCategoriasByIdPadre(padre.id))
+
+        // Obtengo las catagorías hijas en paralelo
+        const hijasResultados = await Promise.all(hijasPromises)
+
         const hijasMap = {}
-        for (const categoriaPadre of categoriasPadreData) {
-          const hijas = await getCategoriasByIdPadre(categoriaPadre.id)
-          hijasMap[categoriaPadre.id] = hijas
-        }
+        categoriasPadreData.forEach((padre, index) => {
+          hijasMap[padre.id] = hijasResultados[index]
+        })
+
         setCategoriasHijas(hijasMap)
       } catch (error) {
         setError(error)
@@ -62,6 +98,60 @@ export default function LayoutProductos() {
     fetchData()
   }, [])
 
+  const handleAgregarAlCarrito = async (producto) => {
+    try {
+      if (!user) {
+        showToast("Debes iniciar sesión para agregar productos al carrito", "error")
+        return
+      }
+
+      // 1. Obtener carrito del usuario
+      const carritos = await getCarritosByIdUsuario(user.id)
+      const carritoActual = carritos[0] // Asumiendo que hay uno solo
+
+      if (!carritoActual) {
+        showToast("No se encontró un carrito para este usuario", "error")
+        return
+      }
+
+      // 2. Obtener si el producto ya está en el carrito
+      const productosCarrito = await getCarritoProductoByIdCarrito(carritoActual.id)
+      const existente = productosCarrito.find((cp) => cp.id_producto === producto.id)
+
+      if (existente) {
+        // 3. Si existe, verificar stock antes de sumar
+        if (existente.cantidad >= producto.stock) {
+          showToast(`Stock agotado. Ya tienes ${existente.cantidad} en el carrito`, "error")
+          return
+        }
+
+        await updateCarritoProducto(existente.id, {
+          cantidad: existente.cantidad + 1,
+        })
+        showToast(`Ahora tienes ${existente.cantidad + 1} unidad${existente.cantidad + 1 > 1 ? 'es' : ''} en tu carrito`, "success")
+      } else {
+        // 4. Si no existe, crearlo
+        if (producto.stock < 1) {
+          console.log("Este producto está fuera de stock", "error")
+          return
+        }
+
+        await createCarritoProducto({
+          id_carrito: carritoActual.id,
+          id_producto: producto.id,
+          cantidad: 1,
+        })
+
+        showToast(`${producto.nombre} agregado al carrito`, "success")
+      }
+
+      setError(null) // Limpiar errores si todo va bien
+    } catch (err) {
+      console.error("Error al agregar al carrito:", err)
+      showToast("Error al agregar el producto al carrito", "error")
+    }
+  }
+
   // Filtrar y ordenar productos
   const filteredProducts = useFiltrarProductos({
     productos,
@@ -70,7 +160,7 @@ export default function LayoutProductos() {
     showAll,
     priceRange,
     sortBy,
-  });
+  })
 
   if (loading) {
     return (
@@ -102,7 +192,10 @@ export default function LayoutProductos() {
   }
 
   return (
-    <div id="layout-productos" className="pt-20 min-h-screen ">
+    <div id="layout-productos" className="pt-20 min-h-screen">
+      {/* Toast Component */}
+      {toastState.visible && <Toast mensaje={toastState.mensaje} tipo={toastState.tipo} onClose={hideToast} />}
+
       {/* Header */}
       <div className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-6">
@@ -165,11 +258,14 @@ export default function LayoutProductos() {
             {/* Grid fijo de 3 columnas */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {filteredProducts.map((producto) => (
-                <ProductoCard key={producto.id} producto={{
-                  ...producto,
-                  nombre: capitalizeAndClean(producto.nombre)
-                }} />
-
+                <ProductoCard
+                  key={producto.id}
+                  producto={{
+                    ...producto,
+                    nombre: capitalizeAndClean(producto.nombre),
+                  }}
+                  onAgregar={() => handleAgregarAlCarrito(producto)}
+                />
               ))}
             </div>
 
