@@ -20,7 +20,7 @@ import { Eye, EyeOff } from "lucide-react"
 export default function AuthForm({ mode = "login", className, ...props }) {
   const isRegister = mode === "register"
   const { login } = useAuth()
-  const { createUsuario } = useUsuario()
+  const { createUsuario, deleteUsuario } = useUsuario()
   const { createCarrito } = useCarrito();
   const { setUser } = useUser();
   const navigate = useNavigate()
@@ -56,7 +56,15 @@ export default function AuthForm({ mode = "login", className, ...props }) {
 
       if (isRegister) {
         const resultado = await createUsuario({ nombre, email, password });
-        await createCarrito({ id_usuario: resultado.id, activo: true });
+
+        try {
+          await createCarrito({ id_usuario: resultado.id, activo: true });
+        } catch (errorCarrito){
+          // Si falla la creación del carrito, elimino el usuario creado
+          await deleteUsuario(resultado.id);
+          throw new Error("Error al crear el carrito. Registro cancelado.", errorCarrito);
+        }
+
         const loginRes = await login({ email, password });
         resultadoUsuario = loginRes.usuario;
       } else {
