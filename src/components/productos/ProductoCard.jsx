@@ -22,7 +22,7 @@ export default function ProductoCard({ producto, onAgregar }) {
 
       <div className="p-6">
         <h3 className="font-bold text-gray-800 mb-2 line-clamp-2">{producto.nombre}</h3>
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2">{producto.descripcion}</p>
+        <p className="text-gray-600 text-sm mb-4 line-clamp-1">{producto.descripcion}</p>
 
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">

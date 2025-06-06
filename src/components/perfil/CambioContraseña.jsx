@@ -11,6 +11,7 @@ export default function CambioContraseña({
   setConfirmarContraseña,
   onGuardar,
   onCancelar,
+  maxLength,
 }) {
   return (
     <div className="mt-4 space-y-3">
@@ -19,18 +20,21 @@ export default function CambioContraseña({
         placeholder="Contraseña actual"
         value={contraseñaActual}
         onChange={(e) => setContraseñaActual(e.target.value)}
+        maxLength={maxLength}
       />
       <Input
         type="password"
         placeholder="Nueva contraseña"
         value={nuevaContraseña}
         onChange={(e) => setNuevaContraseña(e.target.value)}
+        maxLength={maxLength}
       />
       <Input
         type="password"
         placeholder="Confirmar nueva contraseña"
         value={confirmarContraseña}
         onChange={(e) => setConfirmarContraseña(e.target.value)}
+        maxLength={maxLength}
       />
       <div className="flex gap-2">
         <Button variant="purple" onClick={onGuardar}>Guardar</Button>

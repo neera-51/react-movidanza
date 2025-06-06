@@ -286,6 +286,7 @@ export default function FormularioMetodoPago({ onSuccess, onCancel, metodoPago =
                                 placeholder="Como aparece en la tarjeta"
                                 value={form.nombre_titular}
                                 onChange={handleChange}
+                                maxLength={150}
                                 required
                                 className="w-full"
                             />
@@ -342,6 +343,7 @@ export default function FormularioMetodoPago({ onSuccess, onCancel, metodoPago =
                                         name="tarjeta_tipo"
                                         value={form.tarjeta_tipo}
                                         onChange={handleChange}
+                                        maxLength={20}
                                         required
                                         className="w-full"
                                     >

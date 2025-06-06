@@ -307,6 +307,8 @@ export default function Cuenta() {
         setEditando={setEditando}
         onGuardar={handleGuardar}
         onCancelar={handleCancelar}
+        maxLength={150}
+
       />
 
       <CampoEditable
@@ -319,6 +321,7 @@ export default function Cuenta() {
         setEditando={setEditando}
         onGuardar={handleGuardar}
         onCancelar={handleCancelar}
+        maxLength={75}
       />
 
       <CampoEditable
@@ -331,6 +334,7 @@ export default function Cuenta() {
         setEditando={setEditando}
         onGuardar={handleGuardar}
         onCancelar={handleCancelar}
+        maxLength={13}
       />
 
 
@@ -362,6 +366,7 @@ export default function Cuenta() {
             setToastVisible(false);
             setMensaje("");
           }}
+          maxLength={50}
         />
       )}
 

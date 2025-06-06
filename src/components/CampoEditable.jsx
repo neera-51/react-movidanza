@@ -12,6 +12,7 @@ export default function CampoEditable({
   setEditando,
   onGuardar,
   onCancelar,
+  maxLength,
 }) {
   const handleEditarClick = () => {
     setEditando({
@@ -49,6 +50,7 @@ export default function CampoEditable({
             value={valor}
             placeholder={placeholder}
             onChange={(e) => setValor(e.target.value)}
+            maxLength={maxLength}
           />
           <div className="flex gap-2">
             <Button variant="purple" onClick={() => onGuardar(campo)}>Guardar</Button>

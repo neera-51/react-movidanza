@@ -32,10 +32,10 @@ const Footer = () => {
         <div className="text-right">
           <h3 className="text-lg font-semibold text-gray-700">Síguenos</h3>
           <div className="flex justify-end space-x-4 mt-2">
-            <a href="#"><FaFacebook className="text-2xl text-gray-700 hover:text-gray-500" /></a>
-            <a href="#"><FaTiktok className="text-2xl text-gray-700 hover:text-gray-500" /></a>
-            <a href="#"><FaInstagram className="text-2xl text-gray-700 hover:text-gray-500" /></a>
-            <a href="#"><FaXTwitter className="text-2xl text-gray-700 hover:text-gray-500" /></a>
+            <a href="https://facebook.com" target="_blank"><FaFacebook className="text-2xl text-gray-700 hover:text-gray-500" /></a>
+            <a href="https://tiktok.com" target="_blank"><FaTiktok className="text-2xl text-gray-700 hover:text-gray-500" /></a>
+            <a href="https://instagram.com" target="_blank"><FaInstagram className="text-2xl text-gray-700 hover:text-gray-500" /></a>
+            <a href="https://x.com" target="_blank"><FaXTwitter className="text-2xl text-gray-700 hover:text-gray-500" /></a>
           </div>
         </div>
 

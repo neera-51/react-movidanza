@@ -132,14 +132,14 @@ export default function AuthForm({ mode = "login", className, ...props }) {
             <div className="grid gap-2 relative">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Contraseña</Label>
-                {!isRegister && (
+                {/* {!isRegister && (
                   <button
                     onClick={() => { navigate("/forgot_password") }}
                     className="text-sm text-gray-800 hover:text-[#5e0e8d] transition-colors"
                   >
                     ¿Olvidaste tu contraseña?
                   </button>
-                )}
+                )} */}
               </div>
 
               <div className="relative">

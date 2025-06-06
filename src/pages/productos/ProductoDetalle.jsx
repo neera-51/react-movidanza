@@ -221,7 +221,13 @@ export default function ProductoDetalle() {
                                         </div>
                                         <div className="bg-gray-50 p-4 rounded-lg">
                                             <span className="text-sm text-gray-600">Stock disponible</span>
-                                            <p className="font-medium">{producto.stock} unidades</p>
+                                            {producto.stock != null && (
+                                                <p className="font-medium">
+                                                    {console.log(producto.stock)}
+                                                    {producto.stock === 0 ? 0 : producto.stock} unidades
+                                                </p>
+                                            )}
+
                                         </div>
                                         {producto.material && (
                                             <div className="bg-gray-50 p-4 rounded-lg">

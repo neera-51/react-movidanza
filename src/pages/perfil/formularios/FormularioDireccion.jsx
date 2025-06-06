@@ -352,6 +352,7 @@ export default function FormularioDireccion({ onSuccess, onCancel, direccion = "
                             placeholder="Ej: Nombre"
                             value={formulario.nombre}
                             onChange={handleChange}
+                            maxLength={50}
                             className=""
                         />
                     </div>
@@ -365,6 +366,7 @@ export default function FormularioDireccion({ onSuccess, onCancel, direccion = "
                             placeholder="Ej: Apellidos"
                             value={formulario.apellido}
                             onChange={handleChange}
+                            maxLength={100}
                             className=""
                         />
                     </div>
@@ -380,6 +382,7 @@ export default function FormularioDireccion({ onSuccess, onCancel, direccion = "
                         placeholder="Ej: 600 000 000"
                         value={formulario.telefono}
                         onChange={handleChange}
+                        maxLength={25}
                         className=""
                     />
                 </div>
@@ -395,6 +398,7 @@ export default function FormularioDireccion({ onSuccess, onCancel, direccion = "
                             placeholder="Ej: Calle Principal"
                             value={formulario.calle_avenida}
                             onChange={handleChange}
+                            maxLength={250}
                             className=""
                         />
                     </div>
@@ -409,6 +413,7 @@ export default function FormularioDireccion({ onSuccess, onCancel, direccion = "
                             placeholder="Ej: 1"
                             value={formulario.numero}
                             onChange={handleChange}
+                            maxLength={10}
                             className=""
                         />
                     </div>
@@ -425,6 +430,7 @@ export default function FormularioDireccion({ onSuccess, onCancel, direccion = "
                             placeholder="Ej: Edf. A"
                             value={formulario.edificio}
                             onChange={handleChange}
+                            maxLength={10}
                             className=""
                         />
                     </div>
@@ -437,6 +443,7 @@ export default function FormularioDireccion({ onSuccess, onCancel, direccion = "
                             placeholder="Ej: Esc. 1"
                             value={formulario.escalera}
                             onChange={handleChange}
+                            maxLength={10}
                             className=""
                         />
                     </div>
@@ -451,6 +458,7 @@ export default function FormularioDireccion({ onSuccess, onCancel, direccion = "
                             placeholder="Ej: 3"
                             value={formulario.piso}
                             onChange={handleChange}
+                            maxLength={10}
                             className=""
                         />
                     </div>
@@ -460,7 +468,7 @@ export default function FormularioDireccion({ onSuccess, onCancel, direccion = "
                             id="letra"
                             type="text"
                             name="letra"
-                            maxLength="1"
+                            maxLength={1}
                             pattern="[A-Za-z]"
                             placeholder="Ej: B"
                             value={formulario.letra}
@@ -481,6 +489,7 @@ export default function FormularioDireccion({ onSuccess, onCancel, direccion = "
                             placeholder="Ej: 28000"
                             value={formulario.codigo_postal}
                             onChange={handleChange}
+                            maxLength={25}
                             className=""
                         />
                     </div>
@@ -493,6 +502,7 @@ export default function FormularioDireccion({ onSuccess, onCancel, direccion = "
                             placeholder="Ej: Localidad"
                             value={formulario.localidad}
                             onChange={handleChange}
+                            maxLength={100}
                             className=""
                         />
                     </div>
@@ -505,6 +515,7 @@ export default function FormularioDireccion({ onSuccess, onCancel, direccion = "
                             placeholder="Ej: Provincia"
                             value={formulario.provincia}
                             onChange={handleChange}
+                            maxLength={100}
                             className=""
                         />
                     </div>
@@ -519,6 +530,7 @@ export default function FormularioDireccion({ onSuccess, onCancel, direccion = "
                         placeholder="Ej: Cerca del parque, puerta azul"
                         value={formulario.referencia}
                         onChange={handleChange}
+                        maxLength={250}
                         className="w-full border border-gray-300 p-2 rounded resize-none focus:outline-none focus:border-[#7912B0] focus:ring-0.5 focus:ring-[#7912B0]"
                         rows={3}
                     />

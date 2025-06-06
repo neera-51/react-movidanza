@@ -1,6 +1,6 @@
 import { ShoppingCart, Search } from "lucide-react"
 import { useState, useEffect } from "react"
-import ProductoCard from "../../components/ProductoCard"
+import ProductoCard from "../../components/productos/ProductoCard"
 import useProducto from "../../hooks/api/useProducto"
 import useCategoria from "../../hooks/api/useCategoria"
 import useFiltrarProductos from "../../hooks/useFiltrarProductos"
