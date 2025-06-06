@@ -84,7 +84,7 @@ export default function LayoutProductos() {
         setCategoriasHijas(hijasMap)
       } catch (error) {
         setError(error)
-        console.error("Error cargando datos:", error)
+        console.log("Error cargando datos:", error)
       } finally {
         setLoading(false)
       }
