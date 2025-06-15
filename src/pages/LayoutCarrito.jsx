@@ -272,14 +272,10 @@ export default function LayoutCarrito() {
                 <div className="text-center py-12">
                     <p className="text-red-600 mb-4">{error}</p>
                     <button
-                        onClick={() => {
-                            setLoading(true);        // Mostrar la pantalla de "Cargando carrito..."
-                            setError(null);
-                            fetchCarritoData()
-                        }}
+                        onClick={() => navigate("/login")}
                         className="bg-[#7912B0] text-white px-4 py-2 rounded-lg hover:bg-[#6a0f9d] transition-colors"
                     >
-                        Reintentar
+                        Iniciar sesión
                     </button>
                 </div>
             </div>
