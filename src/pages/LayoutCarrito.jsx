@@ -237,9 +237,14 @@ export default function LayoutCarrito() {
     const calcularTotal = () => {
         return carritoProductos
             .reduce((total, cp) => {
-                return total + cp.producto.precio * cp.cantidad
+                const tieneDescuento = cp.producto.descuento > 0;
+                const precioFinal = tieneDescuento
+                    ? cp.producto.precio * (1 - cp.producto.descuento / 100)
+                    : cp.producto.precio;
+
+                return total + precioFinal * cp.cantidad;
             }, 0)
-            .toFixed(2)
+            .toFixed(2);
     }
 
     const calcularTotalItems = () => {
@@ -353,8 +358,27 @@ export default function LayoutCarrito() {
                                             <p className="text-xs sm:text-sm text-gray-500 mb-2 line-clamp-2 break-words overflow-hidden">
                                                 {carritoProducto.producto.descripcion}
                                             </p>
-                                            <p className="text-xl sm:text-2xl font-bold text-[#7912B0]">{carritoProducto.producto.precio}€</p>
+
+                                            <div className="flex items-center justify-center sm:justify-start space-x-2">
+                                                <span className="text-xl sm:text-2xl font-bold text-[#7912B0]">
+                                                    {(carritoProducto.producto.descuento > 0
+                                                        ? carritoProducto.producto.precio * (1 - carritoProducto.producto.descuento / 100)
+                                                        : carritoProducto.producto.precio
+                                                    ).toFixed(2)}€</span>
+
+                                                {carritoProducto.producto.descuento > 0 && (
+                                                    <>
+                                                        <span className="text-lg text-gray-500 line-through">
+                                                            {carritoProducto.producto.precio.toFixed(2)}€
+                                                        </span>
+                                                        <span className="text-xs font-semibold bg-red-500 text-white px-2 py-0.5 rounded-full">
+                                                            -{carritoProducto.producto.descuento}%
+                                                        </span>
+                                                    </>
+                                                )}
+                                            </div>
                                         </div>
+
 
                                         {/* Controles y acciones - Layout responsive */}
                                         <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
@@ -383,7 +407,12 @@ export default function LayoutCarrito() {
                                             {/* Subtotal y eliminar */}
                                             <div className="text-center sm:text-right order-1 sm:order-2">
                                                 <p className="text-lg sm:text-xl font-bold mb-2">
-                                                    {(carritoProducto.producto.precio * carritoProducto.cantidad).toFixed(2)}€
+                                                    {(
+                                                        (carritoProducto.producto.descuento > 0
+                                                            ? carritoProducto.producto.precio * (1 - carritoProducto.producto.descuento / 100)
+                                                            : carritoProducto.producto.precio
+                                                        ) * carritoProducto.cantidad
+                                                    ).toFixed(2)}€
                                                 </p>
                                                 <button
                                                     onClick={() => handleEliminarProducto(carritoProducto)}
@@ -392,6 +421,7 @@ export default function LayoutCarrito() {
                                                     <Trash2 className="h-4 w-4" />
                                                 </button>
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -405,17 +435,25 @@ export default function LayoutCarrito() {
 
                                 {/* Lista de productos en el resumen */}
                                 <div className="space-y-2 mb-4 max-h-40 sm:max-h-60 overflow-y-auto">
-                                    {carritoProductos.map((cp) => (
-                                        <div key={cp.id} className="flex justify-between text-m gap-2">
-                                            <span className="truncate flex-1">
-                                                {capitalizeAndClean(cp.producto.nombre)} x{cp.cantidad}
-                                            </span>
-                                            <span className="font-medium flex-shrink-0">
-                                                {(cp.producto.precio * cp.cantidad).toFixed(2)}€
-                                            </span>
-                                        </div>
-                                    ))}
+                                    {carritoProductos.map((cp) => {
+                                        const tieneDescuento = cp.producto.descuento > 0;
+                                        const precioFinal = tieneDescuento
+                                            ? cp.producto.precio * (1 - cp.producto.descuento / 100)
+                                            : cp.producto.precio;
+
+                                        return (
+                                            <div key={cp.id} className="flex justify-between text-m gap-2">
+                                                <span className="truncate flex-1">
+                                                    {capitalizeAndClean(cp.producto.nombre)} x{cp.cantidad}
+                                                </span>
+                                                <span className="font-medium flex-shrink-0">
+                                                    {(precioFinal * cp.cantidad).toFixed(2)}€
+                                                </span>
+                                            </div>
+                                        );
+                                    })}
                                 </div>
+
 
                                 <hr className="my-4" />
 

@@ -153,12 +153,12 @@ export default function ProductoDetalle() {
                                     />
                                 </div>
 
-                                <div className="flex items-center space-x-4">
+                                {/* <div className="flex items-center space-x-4">
                                     <button className="flex items-center space-x-2 text-gray-600 hover:text-[#7912B0] transition-colors">
                                         <Share2 className="h-5 w-5" />
                                         <span>Compartir producto</span>
                                     </button>
-                                </div>
+                                </div> */}
                             </div>
 
                             {/* Información del producto */}
@@ -253,10 +253,6 @@ export default function ProductoDetalle() {
                                                 <p className="font-medium">{producto.peso}</p>
                                             </div>
                                         )}
-                                    </div>
-                                    <div className="bg-gray-50 p-4 rounded-lg">
-                                        <span className="text-sm text-gray-600">Descripción</span>
-                                        <p className="font-medium">{producto.descripcion}</p>
                                     </div>
                                 </div>
 

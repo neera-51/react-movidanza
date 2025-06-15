@@ -20,7 +20,7 @@ export default function LayoutDisciplinas() {
   }, []);
 
   return (
-    <section id="layout-disciplinas" className="pt-32 container mx-auto px-4">
+    <section id="layout-disciplinas" className="pt-32 container mx-auto px-4 pb-10">
       {error && (
         <div className="text-red-500 text-center mb-4">
           Ocurrió un error al cargar las disciplinas.

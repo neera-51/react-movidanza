@@ -76,7 +76,7 @@ const DisciplinaDetalle = () => {
                                 <Info className="h-6 w-6 text-morado" />
                                 <h2 className="text-2xl font-bold text-morado">Descripción</h2>
                             </div>
-                            <p className="text-gray-700 leading-relaxed">
+                            <p className="text-gray-800 leading-relaxed text-lg">
                                 {disciplina.descripcion || "Sin descripción disponible."}
                             </p>
                         </div>
