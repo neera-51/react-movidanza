@@ -217,21 +217,29 @@ export default function LayoutCarrito() {
         })
     }
 
-
     // Vaciar carrito completo
     const handleVaciarCarrito = async () => {
-        try {
-            if (!carrito) return
+        if (!carrito) return;
 
-            await deleteCarritoProductosByIdCarrito(carrito.id)
+        mostrarConfirmacion({
+            title: "Vaciar carrito",
+            description: "¿Está seguro de que desea eliminar todos los productos del carrito?",
+            onConfirm: async () => {
+                try {
+                    await deleteCarritoProductosByIdCarrito(carrito.id);
+                    setCarritoProductos([]);
+                    showToast("Carrito vaciado correctamente", "success");
+                } catch (err) {
+                    console.error("Error al vaciar el carrito:", err);
+                    showToast("Error al vaciar el carrito", "error");
+                } finally {
+                    setDialogOpen(false);
+                }
+            },
+            color: "red", // o el que prefieras
+        });
+    };
 
-            setCarritoProductos([])
-            showToast("Carrito vaciado correctamente", "success")
-        } catch (err) {
-            console.error("Error al vaciar carrito:", err)
-            showToast("Error al vaciar el carrito", "error")
-        }
-    }
 
     // Calcular total
     const calcularTotal = () => {
