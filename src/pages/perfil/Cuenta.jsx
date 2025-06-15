@@ -96,14 +96,16 @@ export default function Cuenta() {
     let nuevoValor = valor;
 
     if (campo === "nombre") {
+      // Elimina caracteres inválidos pero NO recorta aún los espacios al final
       nuevoValor = nuevoValor
-        .replace(/[^a-zA-ZÁÉÍÓÚÜÑáéíóúüñ\s]/g, "") // Solo letras y espacios
-        .replace(/\s{2,}/g, " ");                 // Reemplaza espacios dobles
+        .replace(/[^a-zA-ZÁÉÍÓÚÜÑáéíóúüñ\s]/g, "")
+        .replace(/\s{2,}/g, " ");
 
+      // Contar palabras sin eliminar espacios al final
       const palabras = nuevoValor.trim().split(/\s+/);
-      if (palabras.length > 5) return;
+      if (palabras.length > 5) return; // ❌ impide más de 5 palabras
 
-      setNuevoNombre(nuevoValor);
+      setNuevoNombre(nuevoValor); // ✅ acepta espacio al final si no pasa de 5 palabras
     }
 
 
@@ -300,7 +302,7 @@ export default function Cuenta() {
       <CampoEditable
         label="Nombre"
         placeholder="Nombre"
-        valor={capitalize(nuevoNombre)}
+        valor={nuevoNombre}
         setValor={(valor) => handleChangeCampo("nombre", valor)}
         campo="nombre"
         editando={editando}
